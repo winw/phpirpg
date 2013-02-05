@@ -135,6 +135,8 @@
      return new ParsedLine($sLine, 'JOIN', array($aRegs[1], $aRegs[2]));
     } else if (preg_match('/^:([^ ]+) PART ([^ ]+)(?:\s:?)(.*)?$/', $sLine, $aRegs)) {
      return new ParsedLine($sLine, 'PART', array($aRegs[1], $aRegs[2], $aRegs[3]));
+    } else if (preg_match('/^:([^ ]+) QUIT(?:\s:?)(.*)?$/', $sLine, $aRegs)) {
+     return new ParsedLine($sLine, 'QUIT', array($aRegs[1], $aRegs[2]));
     } else if (preg_match('/^[^ ]+ (\d+)/', $sLine, $aRegs)) {
      return new ParsedLine($sLine, 'RAW', array($aRegs[1]));
     } else {

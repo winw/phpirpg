@@ -80,6 +80,9 @@
     case 'PART':
      $this->handlePart(new ParsedMask($oLine[0]), $oLine[1], $oLine[2]);
     break;
+    case 'QUIT':
+     $this->handleQuit(new ParsedMask($oLine[0]), $oLine[1]);
+    break;
     case 'RAW':
      switch ($oLine[0]) {
       case 422:
@@ -101,6 +104,10 @@
   
   private function handlePart(ParsedMask $oWho, $sChannel, $sMessage) {
    $this->oCore->msg($sChannel, '[part] nick : '.$oWho->getNick().' || user : '.$oWho->getUser().' || host : '.$oWho->getHost().' || message : '.$sMessage);
+  }
+  
+  private function handleQuit(ParsedMask $oWho, $sMessage) {
+   $this->oCore->msg($sChannel, '[quit] nick : '.$oWho->getNick().' || user : '.$oWho->getUser().' || host : '.$oWho->getHost().' || message : '.$sMessage);
   }
   
   public function tick() {
