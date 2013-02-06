@@ -73,6 +73,10 @@
   public function nick($sNick) {
    return $this->writeLine('NICK '.$sNick);
   }
+  
+  public function who($sTarget, $sFlags = '') {
+   return $this->writeLine('WHO '.rtrim($sTarget.' '.$sFlags));
+  }
  }
  
  class Core extends IrcCommands {
@@ -139,6 +143,8 @@
      return new ParsedLine($sLine, 'JOIN', array($aRegs[1], $aRegs[2]));
     } else if (preg_match('/^:([^ ]+) PART ([^ ]+)(?:\s:)?(.*)?$/', $sLine, $aRegs)) {
      return new ParsedLine($sLine, 'PART', array($aRegs[1], $aRegs[2], $aRegs[3]));
+    } else if (preg_match('/^:([^ ]+) PRIVMSG ([^ ]+) :(.*)$/', $sLine, $aRegs)) {
+     return new ParsedLine($sLine, 'PRIVMSG', array($aRegs[1], $aRegs[2], $aRegs[3]));
     } else if (preg_match('/^:([^ ]+) KICK ([^ ]+) ([^ ]+)(?:\s:)?(.*)?$/', $sLine, $aRegs)) { //>> :win!~win@warriorhouse.net KICK #win Shiwang :TRAITRE
      return new ParsedLine($sLine, 'KICK', array($aRegs[1], $aRegs[2], $aRegs[3], $aRegs[4]));
     } else if (preg_match('/^:([^ ]+) NICK :([^ ]+)/', $sLine, $aRegs)) { //:win51!~phpirpgbo@par95-2-78-213-76-33.fbx.proxad.net NICK :phpirpgbot

@@ -45,7 +45,7 @@
  
  define('IRPG_NICK', 'win');
  define('IRPG_USER', 'phpirpgbot');
- define('IRPG_DESCRIPTION', 'phpirpg $Id$');
+ define('IRPG_DESCRIPTION', 'phpirpg');
  define('IRPG_CHANNEL', '#win');
  
  
