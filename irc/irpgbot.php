@@ -7,6 +7,8 @@
 
  require_once 'core.class.php';
  require_once 'irpg.class.php';
+ 
+ require_once 'inc/ChannelUsers.class.php';
 
  require_once 'inc/mysqlman/dbDontEscapeString.class.php';
  require_once 'inc/mysqlman/dbInstance.class.php';
