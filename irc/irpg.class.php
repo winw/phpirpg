@@ -80,6 +80,9 @@
     case 'PART':
      $this->handlePart(new ParsedMask($oLine[0]), $oLine[1], $oLine[2]);
     break;
+    case 'KICK':
+     $this->handleKick(new ParsedMask($oLine[0]), $oLine[1], $oLine[2], $oLine[3]);
+    break;
     case 'QUIT':
      $this->handleQuit(new ParsedMask($oLine[0]), $oLine[1]);
     break;
@@ -104,6 +107,10 @@
   
   private function handlePart(ParsedMask $oWho, $sChannel, $sMessage) {
    $this->oCore->msg($sChannel, '[part] nick : '.$oWho->getNick().' || user : '.$oWho->getUser().' || host : '.$oWho->getHost().' || message : '.$sMessage);
+  }
+  
+  private function handleKick(ParsedMask $oWho, $sChannel, $sToNick, $sMessage) {
+   $this->oCore->msg($sChannel, '[kick] nick : '.$oWho->getNick().' || user : '.$oWho->getUser().' || host : '.$oWho->getHost().' || to : '.$sToNick.' || message : '.$sMessage);
   }
   
   private function handleQuit(ParsedMask $oWho, $sMessage) {

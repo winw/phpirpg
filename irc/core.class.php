@@ -133,8 +133,10 @@
      return new ParsedLine($sLine, 'PING', array($aRegs[1]));
     } else if (preg_match('/^:([^ ]+) JOIN ([^ ]+)/', $sLine, $aRegs)) {
      return new ParsedLine($sLine, 'JOIN', array($aRegs[1], $aRegs[2]));
-    } else if (preg_match('/^:([^ ]+) PART ([^ ]+)(?:\s:?)(.*)?$/', $sLine, $aRegs)) {
+    } else if (preg_match('/^:([^ ]+) PART ([^ ]+)(?:\s:)?(.*)?$/', $sLine, $aRegs)) {
      return new ParsedLine($sLine, 'PART', array($aRegs[1], $aRegs[2], $aRegs[3]));
+    } else if (preg_match('/^:([^ ]+) KICK ([^ ]+) ([^ ]+)(?:\s:)?(.*)?$/', $sLine, $aRegs)) { //>> :win!~win@warriorhouse.net KICK #win Shiwang :TRAITRE
+     return new ParsedLine($sLine, 'KICK', array($aRegs[1], $aRegs[2], $aRegs[3], $aRegs[4]));
     } else if (preg_match('/^:([^ ]+) QUIT(?:\s:?)(.*)?$/', $sLine, $aRegs)) {
      return new ParsedLine($sLine, 'QUIT', array($aRegs[1], $aRegs[2]));
     } else if (preg_match('/^[^ ]+ (\d+)/', $sLine, $aRegs)) {
