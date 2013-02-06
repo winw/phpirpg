@@ -114,7 +114,7 @@
   }
   
   private function handleQuit(ParsedMask $oWho, $sMessage) {
-   $this->oCore->msg($sChannel, '[quit] nick : '.$oWho->getNick().' || user : '.$oWho->getUser().' || host : '.$oWho->getHost().' || message : '.$sMessage);
+   $this->oCore->msg($this->aConfiguration['channel'], '[quit] nick : '.$oWho->getNick().' || user : '.$oWho->getUser().' || host : '.$oWho->getHost().' || message : '.$sMessage);
   }
   
   public function tick() {
