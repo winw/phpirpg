@@ -69,6 +69,10 @@
   public function notice($sTarget, $sMessage) {
    return $this->writeLine('NOTICE '.$sTarget.' :'.$sMessage);
   }
+  
+  public function nick($sNick) {
+   return $this->writeLine('NICK '.$sNick);
+  }
  }
  
  class Core extends IrcCommands {
@@ -137,6 +141,8 @@
      return new ParsedLine($sLine, 'PART', array($aRegs[1], $aRegs[2], $aRegs[3]));
     } else if (preg_match('/^:([^ ]+) KICK ([^ ]+) ([^ ]+)(?:\s:)?(.*)?$/', $sLine, $aRegs)) { //>> :win!~win@warriorhouse.net KICK #win Shiwang :TRAITRE
      return new ParsedLine($sLine, 'KICK', array($aRegs[1], $aRegs[2], $aRegs[3], $aRegs[4]));
+    } else if (preg_match('/^:([^ ]+) NICK :([^ ]+)/', $sLine, $aRegs)) { //:win51!~phpirpgbo@par95-2-78-213-76-33.fbx.proxad.net NICK :phpirpgbot
+     return new ParsedLine($sLine, 'NICK', array($aRegs[1], $aRegs[2]));
     } else if (preg_match('/^:([^ ]+) QUIT(?:\s:?)(.*)?$/', $sLine, $aRegs)) {
      return new ParsedLine($sLine, 'QUIT', array($aRegs[1], $aRegs[2]));
     } else if (preg_match('/^[^ ]+ (\d+)/', $sLine, $aRegs)) {

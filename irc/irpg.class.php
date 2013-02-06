@@ -55,10 +55,6 @@
    
    $this->oCore->writeLine('USER '.$this->aConfiguration['user'].' '.PHP_OS.' null :'.$this->aConfiguration['description']);
    $this->oCore->writeLine('NICK '.$this->aConfiguration['nick']);
-   
-   $this->bConnected = true;
-   
-   debug('Connected');
   }
   
   public function disconnected() {
@@ -86,11 +82,29 @@
     case 'QUIT':
      $this->handleQuit(new ParsedMask($oLine[0]), $oLine[1]);
     break;
+    case 'NICK':
+     $this->handleNick(new ParsedMask($oLine[0]), $oLine[1]);
+    break;
     case 'RAW':
      switch ($oLine[0]) {
-      case 422:
-      case 376;
+      case 001:
+       $this->bConnected = true;
+       debug('Connected');
+      break;
+      case 422: // Motd missing
+      case 376; // End of motd
        $this->oCore->join($this->aConfiguration['channel']);
+       $this->oCore->nick('phpirpgbot');
+      break;
+      case 432: // Erroneus nickname
+      case 433: // Nick already in use
+       $sNewNick = $this->aConfiguration['nick'].rand(10,99);
+       
+       $this->oCore->nick($sNewNick);
+       
+       if (!$this->bConnected) {
+        $this->aConfiguration['nick'] = $sNewNick; // If we don't have received welcome message yet, we will not get reply after nickname change
+       }
       break;
       default:
        debug('Unknown raw :'.$oLine);
@@ -115,6 +129,15 @@
   
   private function handleQuit(ParsedMask $oWho, $sMessage) {
    $this->oCore->msg($this->aConfiguration['channel'], '[quit] nick : '.$oWho->getNick().' || user : '.$oWho->getUser().' || host : '.$oWho->getHost().' || message : '.$sMessage);
+  }
+  
+  private function handleNick(ParsedMask $oWho, $sNewNick) {
+   $bMe = false;
+   if ($oWho->getNick() === $this->aConfiguration['nick']) { // If it's the nickname of the bot, we change it in the configuration
+    $this->aConfiguration['nick'] = $sNewNick;
+    $bMe = true;
+   }
+   $this->oCore->msg($this->aConfiguration['channel'], '[nick] nick : '.$oWho->getNick().' || user : '.$oWho->getUser().' || host : '.$oWho->getHost().' || newnick : '.$sNewNick.' || me : '.($bMe ? 'Y' : 'N'));
   }
   
   public function tick() {

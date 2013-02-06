@@ -43,7 +43,7 @@
  define('SERVER_IP', '83.140.172.210');
  define('SERVER_PORT', 6667);
  
- define('IRPG_NICK', 'phpirpgbot');
+ define('IRPG_NICK', 'win');
  define('IRPG_USER', 'phpirpgbot');
  define('IRPG_DESCRIPTION', 'phpirpg $Id$');
  define('IRPG_CHANNEL', '#win');
