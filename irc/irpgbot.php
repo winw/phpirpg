@@ -44,6 +44,7 @@
  
  define('SERVER_IP', '83.140.172.210');
  define('SERVER_PORT', 6667);
+ define('SERVER_NETSPLIT', '#^*.net *.split$#');
  
  define('IRPG_NICK', 'win');
  define('IRPG_USER', 'phpirpgbot');
@@ -56,7 +57,8 @@
   'nick' => IRPG_NICK,
   'user' => IRPG_USER,
   'description' => IRPG_DESCRIPTION,
-  'channel' => IRPG_CHANNEL
+  'channel' => IRPG_CHANNEL,
+  'netsplit' => SERVER_NETSPLIT
  ));
  
  while (true) {

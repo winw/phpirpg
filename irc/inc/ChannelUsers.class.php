@@ -5,7 +5,8 @@
    'user' => '',
    'host' => '',
    'flags' => '',
-   'description' => ''
+   'description' => '',
+   'netsplit' => false
   );
   
   public function __construct(ParsedMask $oMask = null) {
@@ -24,7 +25,11 @@
    }
    
    if ($sMethod == 'get') {
-    return $this->aUser[$sKey];
+    if ($sKey == 'netsplit') { 
+     return $this->inNetsplit();
+    } else {
+     return $this->aUser[$sKey];
+    }
    } else {
     $this->aUser[$sKey] = $aArguments[0];
     return $this;
@@ -37,6 +42,16 @@
   
   public function isOperator() {
    return strpos($this->aUser['flags'], '@') !== false;
+  }
+  
+  public function inNetsplit() {
+   if ($this->aUser['netsplit'] !== false) {
+    if ($this->aUser['netsplit']+3600 > time()) {
+     $this->aUser['netsplit'] = false;
+    }
+   }
+   
+   return $this->aUser['netsplit'] !== false;
   }
   
  }
@@ -55,6 +70,14 @@
   public static function findByMask(ParsedMask $oMask) {
    foreach (self::$aoUsers as &$oUser) {
     if (($oUser->getNick() === $oMask->getNick()) && ($oUser->getUser() === $oMask->getUser()) && ($oUser->getHost() === $oMask->getHost())) {
+     return $oUser;
+    }
+   }
+  }
+  
+  public static function findByUserAndHost(ParsedMask $oMask) {
+   foreach (self::$aoUsers as &$oUser) {
+    if (($oUser->getUser() === $oMask->getUser()) && ($oUser->getHost() === $oMask->getHost())) {
      return $oUser;
     }
    }

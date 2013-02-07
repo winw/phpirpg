@@ -163,9 +163,15 @@
     $this->oCore->who($sChannel);
    }
    
-   $oUser =& ChannelUsers::findByMask($oWho);
+   $oUser =& ChannelUsers::findByMask($oWho); //ChannelUsers::findByUserAndHost($oWho);
    
-   if (!$oUser) {
+   if ($oUser) {
+    if ($oUser->inNetsplit()) {
+     //$oUser->setNick($oWho->getNick());
+     $oUser->setNetsplit(false);
+     $this->oCore->msg($oUser->getNick(), _('You where reconnected without penalties after netsplit');
+    }
+   } else {
     ChannelUsers::add(new ChannelUser($oWho));
    }
   }
@@ -191,9 +197,15 @@
   private function handleQuit(ParsedMask $oWho, $sMessage) {
    $this->oCore->msg($this->aConfiguration['channel'], '[quit] nick : '.$oWho->getNick().' || user : '.$oWho->getUser().' || host : '.$oWho->getHost().' || message : '.$sMessage);
    
+   $bNetsplit = (bool)preg_match($this->aConfiguration['netsplit'], $sMessage);
+   
    $oUser =& ChannelUsers::findByMask($oWho);
    if ($oUser) {
-    ChannelUsers::del($oUser);
+    if ($bNetsplit) {
+     $oUser->setNetsplit(time());
+    } else {
+     ChannelUsers::del($oUser);
+    }
    }
   }
   
