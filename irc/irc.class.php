@@ -35,7 +35,7 @@
   }
  }
  
- class Irpg {
+ class Irc {
   private $oCore;
   private $bConnected = false; // true if 001 raw was retieved
   private $bWho = false; // true if we are currently processing who request
@@ -47,6 +47,8 @@
     throw new ArgumentException();
    }
    $this->aConfiguration = $aConfiguration;
+   
+   ModuleManager::add(new ModCore($oCore));
   }
   
   public function connected() {
@@ -135,9 +137,7 @@
   }
   
   private function handlePrivmsg(ParsedMask $oWho, $sChannel, $sMessage) {
-   if ($sMessage == '!x') {
-    ChannelUsers::debug();
-   }
+   ModuleManager::dispatch('onMsg', $oWho, $sChannel, $sMessage);
   }
   
   private function handleWhoLine(ParsedMask $oWho, $sChannel, $sFlags, $sDescription) {
@@ -154,6 +154,8 @@
    if ($bNew) {
     ChannelUsers::add($oUser);
    }
+   
+   ModuleManager::dispatch('onWhoLine', $oWho, $sChannel, $sFlags, $sDescription);
   }
 
   private function handleJoin(ParsedMask $oWho, $sChannel) {
@@ -169,11 +171,13 @@
     if ($oUser->inNetsplit()) {
      //$oUser->setNick($oWho->getNick());
      $oUser->setNetsplit(false);
-     $this->oCore->msg($oUser->getNick(), _('You where reconnected without penalties after netsplit');
+     $this->oCore->msg($oUser->getNick(), _('You were reconnected without penalties after netsplit'));
     }
    } else {
     ChannelUsers::add(new ChannelUser($oWho));
    }
+   
+   ModuleManager::dispatch('onJoin', $oWho, $sChannel);
   }
   
   private function handlePart(ParsedMask $oWho, $sChannel, $sMessage) {
@@ -183,6 +187,8 @@
    if ($oUser) {
     ChannelUsers::del($oUser);
    }
+   
+   ModuleManager::dispatch('onPart',$oWho, $sChannel, $sMessage);
   }
   
   private function handleKick(ParsedMask $oWho, $sChannel, $sToNick, $sMessage) {
@@ -192,6 +198,8 @@
    if ($oUser) {
     ChannelUsers::del($oUser);
    }
+   
+   ModuleManager::dispatch('onKick', $oWho, $sChannel, $sToNick, $sMessage);
   }
   
   private function handleQuit(ParsedMask $oWho, $sMessage) {
@@ -207,6 +215,8 @@
      ChannelUsers::del($oUser);
     }
    }
+   
+   ModuleManager::dispatch('onQuit', $oWho, $sMessage);
   }
   
   private function handleNick(ParsedMask $oWho, $sNewNick) {
@@ -221,6 +231,8 @@
    if ($oUser) {
     $oUser->setNick($sNewNick);
    }
+   
+   ModuleManager::dispatch('onNick', $oWho, $sNewNick);
   }
   
   public function tick() {
