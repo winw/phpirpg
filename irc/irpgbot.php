@@ -4,11 +4,21 @@
  ignore_user_abort(false);
 
  define('BASE_PATH', __DIR__.'/');
+ 
+ require_once 'inc/IrcEvents.interface.php';
+ 
+ require_once 'inc/IrcCommands.class.php';
+ 
+ require_once 'inc/Module.class.php';
+ 
+ require_once 'inc/ModuleManager.class.php';
 
  require_once 'core.class.php';
- require_once 'irpg.class.php';
+ require_once 'irc.class.php';
  
  require_once 'inc/ChannelUsers.class.php';
+ 
+ include 'modules/ModCore.php';
 
  require_once 'inc/mysqlman/dbDontEscapeString.class.php';
  require_once 'inc/mysqlman/dbInstance.class.php';
@@ -53,7 +63,7 @@
  
  
  $oCore = new Core();
- $oBot = new Irpg($oCore, array(
+ $oIrc = new Irc($oCore, array(
   'nick' => IRPG_NICK,
   'user' => IRPG_USER,
   'description' => IRPG_DESCRIPTION,
@@ -67,13 +77,13 @@
     'ip' => SERVER_IP,
     'port' => SERVER_PORT
    ))) {
-    $oBot->connected();
+    $oIrc->connected();
     for (; $oCore->isConnected(); usleep(1000)) {
      for (; ($oLine = $oCore->parseLine()) !== null; usleep(1000)) {
-      $oBot->parse($oLine);
+      $oIrc->parse($oLine);
      }
      
-     $oBot->tick();
+     $oIrc->tick();
     }
    }
   } catch (SocketException $e) {
@@ -82,7 +92,7 @@
 
   $oCore->disconnect();
   
-  $oBot->disconnected();
+  $oIrc->disconnected();
   
   sleep(30); // On attend 30s avant la reconnection
  }
