@@ -1,19 +1,8 @@
 <?php
  class ModuleManager {
-  private static $aMethods = array(
-   'onLoad',
-   'onMsg',
-   'onWhoLine',
-   'onJoin',
-   'onPart',
-   'onKick',
-   'onQuit',
-   'onNick'
-  );
-  
   private static $aoModules = array();
   
-  public static function add(IrcEvents &$oModule) {
+  public static function add(Module &$oModule) {
    $sClass = get_class($oModule);
    
    if (isset(self::$aoModules[$sClass])) {
@@ -29,12 +18,10 @@
    
    $sMethod = array_shift($aArguments);
    
-   if (!in_array($sMethod, self::$aMethods)) {
-    throw new ArgumentException($sMethod);
-   }
-   
    foreach (self::$aoModules as &$oModule) {
-    call_user_func_array(array($oModule, $sMethod), $aArguments);
+    if (method_exists($oModule, $sMethod)) {
+     call_user_func_array(array($oModule, $sMethod), $aArguments);
+    }
    }
   }
   
@@ -50,6 +37,10 @@
    
    if (!isset(self::$aoModules[$sClass])) {
     throw new Exception('Unknown module '.$sClass);
+   }
+   
+   if (method_exists(self::$aoModules[$sClass], $sMethod)) {
+    throw new ArgumentException($sMethod);
    }
    
    return call_user_func_array(array(self::$aoModules[$sClass], $sMethod), $aArguments);

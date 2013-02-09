@@ -17,7 +17,7 @@
   }
   
   public function action($sTarget, $sMessage) {
-   return $this->msg($sTarget, "\x01".$sMessage."\x01");
+   return $this->ctcp($sTarget, 'ACTION '.$sMessage);
   }
   
   public function notice($sTarget, $sMessage) {
@@ -30,6 +30,18 @@
   
   public function who($sTarget, $sFlags = '') {
    return $this->writeLine('WHO '.rtrim($sTarget.' '.$sFlags));
+  }
+  
+  public function quit($sMessage = '') {
+   return $this->writeLine('QUIT :'.$sMessage);
+  }
+  
+  public function ctcp($sTarget, $sMessage) {
+   return $this->msg($sTarget, "\x01".$sMessage."\x01");
+  }
+  
+  public function ctcpReply($sTarget, $sMessage) {
+   return $this->notice($sTarget, "\x01".$sMessage."\x01");
   }
   
   abstract protected function writeLine($sLine);

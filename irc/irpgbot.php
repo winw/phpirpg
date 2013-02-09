@@ -5,7 +5,7 @@
 
  define('BASE_PATH', __DIR__.'/');
  
- require_once 'inc/IrcEvents.interface.php';
+ require_once 'inc/ParsedLine.class.php';
  
  require_once 'inc/IrcCommands.class.php';
  
@@ -17,10 +17,9 @@
  require_once 'irc.class.php';
  
  require_once 'inc/ChannelUsers.class.php';
- 
- include 'modules/ModCore.php';
 
  require_once 'inc/mysqlman/dbDontEscapeString.class.php';
+ require_once 'inc/mysqlman/dbPrimitiveObject.class.php';
  require_once 'inc/mysqlman/dbInstance.class.php';
  require_once 'inc/mysqlman/dbClassGen.class.php';
  dbClassGen::$sPath = BASE_PATH.'_cache/db/';
@@ -54,9 +53,9 @@
  
  define('SERVER_IP', '83.140.172.210');
  define('SERVER_PORT', 6667);
- define('SERVER_NETSPLIT', '#^*.net *.split$#');
+ define('SERVER_NETSPLIT', '#^\*.net \*.split$#');
  
- define('IRPG_NICK', 'win');
+ define('IRPG_NICK', 'phpirpgbot');
  define('IRPG_USER', 'phpirpgbot');
  define('IRPG_DESCRIPTION', 'phpirpg');
  define('IRPG_CHANNEL', '#win');

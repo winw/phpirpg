@@ -5,47 +5,7 @@
  class SocketException extends \Exception {
  }
  
- class parsedLine implements ArrayAccess, Countable  {
-  private $sType = '';
-  private $aData = array();
-  private $sRaw = '';
-  private $iNbData = 0;
-  
-  public function __construct($sRaw, $sType, array $aData = array()) {
-   $this->sRaw = $sRaw;
-   $this->sType = $sType;
-   $this->aData = $aData;
-   $this->iNbData = count($aData);
-  }
-  
-  public function getType() {
-   return $this->sType;
-  }
-  
-  public function offsetExists($mOffset) {
-   return isset($this->aData[$mOffset]);
-  }
-  
-  public function offsetGet($mOffset) {
-   return $this->aData[$mOffset];
-  }
-  
-  public function offsetSet($mOffset, $mValue) {
-  }
-  
-  public function offsetUnset($mOffset) {
-  }
-  
-  public function count() {
-   return $this->iNbData;
-  }
-  
-  public function __toString() {
-   return $this->sRaw;
-  }
- }
- 
- class Core extends IrcCommands {
+ class Core {
   private $aConfiguration = array();
   private $bConnected = false;
   private $rSocket;
@@ -110,15 +70,31 @@
     } else if (preg_match('/^:([^ ]+) PART ([^ ]+)(?:\s:)?(.*)?$/', $sLine, $aRegs)) {
      return new ParsedLine($sLine, 'PART', array($aRegs[1], $aRegs[2], $aRegs[3]));
     } else if (preg_match('/^:([^ ]+) PRIVMSG ([^ ]+) :(.*)$/', $sLine, $aRegs)) {
-     return new ParsedLine($sLine, 'PRIVMSG', array($aRegs[1], $aRegs[2], $aRegs[3]));
+    
+     if (preg_match("/^\x01ACTION (.*)\x01$/", $aRegs[3], $aRegs2)) {
+      return new ParsedLine($sLine, 'ACTION', array($aRegs[1], $aRegs[2], $aRegs2[1]));
+     } else if (preg_match("/^\x01(.*)\x01$/", $aRegs[3], $aRegs2)) {
+      return new ParsedLine($sLine, 'CTCP', array($aRegs[1], $aRegs[2], $aRegs2[1]));
+     } else {
+      return new ParsedLine($sLine, 'MSG', array($aRegs[1], $aRegs[2], $aRegs[1]));
+     }
+     
+    } else if (preg_match('/^:([^ ]+) NOTICE ([^ ]+) :(.*)$/', $sLine, $aRegs)) {
+    
+     if (preg_match("/^\x01(.*)\x01$/", $aRegs[3], $aRegs2)) {
+      return new ParsedLine($sLine, 'CTCPREPLY', array($aRegs[1], $aRegs[2], $aRegs2[1]));
+     } else {
+      return new ParsedLine($sLine, 'NOTICE', array($aRegs[1], $aRegs[2], $aRegs[1]));
+     }
+     
     } else if (preg_match('/^:([^ ]+) KICK ([^ ]+) ([^ ]+)(?:\s:)?(.*)?$/', $sLine, $aRegs)) { //>> :win!~win@warriorhouse.net KICK #win Shiwang :TRAITRE
      return new ParsedLine($sLine, 'KICK', array($aRegs[1], $aRegs[2], $aRegs[3], $aRegs[4]));
     } else if (preg_match('/^:([^ ]+) NICK :([^ ]+)/', $sLine, $aRegs)) { //:win51!~phpirpgbo@par95-2-78-213-76-33.fbx.proxad.net NICK :phpirpgbot
      return new ParsedLine($sLine, 'NICK', array($aRegs[1], $aRegs[2]));
     } else if (preg_match('/^:([^ ]+) QUIT(?:\s:?)(.*)?$/', $sLine, $aRegs)) {
      return new ParsedLine($sLine, 'QUIT', array($aRegs[1], $aRegs[2]));
-    } else if (preg_match('/^[^ ]+ (\d+)/', $sLine, $aRegs)) {
-     return new ParsedLine($sLine, 'RAW', array($aRegs[1]));
+    } else if (preg_match('/^[^ ]+ (\d+)(?:\s)?(.*)/', $sLine, $aRegs)) {
+     return new ParsedLine($sLine, 'RAW', array($aRegs[1], $aRegs[2]));
     } else {
      return new ParsedLine($sLine, 'UNKNOWN');
     }
