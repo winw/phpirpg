@@ -1,5 +1,5 @@
 <?php
- class parsedLine implements ArrayAccess, Countable  {
+ class parsedLine implements \ArrayAccess, \Countable  {
   private $sType = '';
   private $aData = array();
   private $sRaw = '';
