@@ -11,6 +11,9 @@
  
  require_once 'inc/Module.class.php';
  
+ require_once 'inc/Timer.class.php';
+ require_once 'inc/TimerManager.class.php';
+ 
  require_once 'inc/ModuleManager.class.php';
 
  require_once 'core.class.php';
@@ -70,6 +73,16 @@
   'netsplit' => SERVER_NETSPLIT
  ));
  
+ $oTimer = new Timer(60, 0, function() {
+  try {
+   dbInstance::get('site')->query('SELECT 1;');
+  } catch (Exception $e) {
+   echo $e->getMessage()."\n";
+  }
+ });
+ 
+ TimerManager::add('mysql_antiidle', $oTimer);
+ 
  while (true) {
   try {
    if ($oCore->connect(array(
@@ -77,12 +90,13 @@
     'port' => SERVER_PORT
    ))) {
     $oIrc->connected();
-    for (; $oCore->isConnected(); usleep(1000)) {
-     for (; ($oLine = $oCore->parseLine()) !== null; usleep(1000)) {
+    for (; $oCore->isConnected(); usleep(10000)) { // 1/100ème de seconde
+     for (; ($oLine = $oCore->parseLine()) !== null; usleep(10000)) { // Lecture de 100lignes/seconde
       $oIrc->parse($oLine);
      }
      
      $oIrc->tick();
+     TimerManager::tick();
     }
    }
   } catch (SocketException $e) {
