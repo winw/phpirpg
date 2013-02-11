@@ -9,6 +9,8 @@
  
  require_once 'inc/IrcCommands.class.php';
  
+ require_once 'inc/ParsedMask.class.php';
+ 
  require_once 'inc/Module.class.php';
  
  require_once 'inc/Timer.class.php';
@@ -18,8 +20,6 @@
 
  require_once 'core.class.php';
  require_once 'irc.class.php';
- 
- require_once 'inc/ChannelUsers.class.php';
 
  require_once 'inc/mysqlman/dbDontEscapeString.class.php';
  require_once 'inc/mysqlman/dbPrimitiveObject.class.php';

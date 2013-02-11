@@ -1,46 +1,9 @@
 <?php
- class parsedMask {
-  private $sHost = '';
-  private $sNick = '';
-  private $sUser = '';
-  private $sMask = '';
-  
-  public function __construct($sMask) {
-   $this->sMask = $sMask;
-   
-   $iUser = strpos($sMask, '!');
-   $iHost = strpos($sMask, '@', $iUser+1);
-   
-   if ($iUser !== false && $iHost !== false) {
-    $this->sNick = substr($sMask, 0, $iUser);
-    $this->sUser = substr($sMask, $iUser+1, $iHost-$iUser-1);
-    $this->sHost = substr($sMask, $iHost+1);
-   }
-  }
-  
-  public function getHost() {
-   return $this->sHost;
-  }
-  
-  public function getNick() {
-   return $this->sNick;
-  }
-  
-  public function getUser() {
-   return $this->sUser;
-  }
-  
-  public function __toString() {
-   return $this->sMask;
-  }
- }
- 
  class Irc extends IrcCommands {
   private $oCore;
   private $bConnected = false; // true if 001 raw was retieved
-  private $bWho = false; // true if we are currently processing who request
   public $aConfiguration = array();
-  private $aModules = array('ModChannelUsers', 'ModCore');
+  private $aModules = array('ModChannelUsers', 'ModCore', 'ModDebug');
   
   public function __construct(Core &$oCore, array $aConfiguration) {
    $this->oCore = $oCore;
@@ -175,8 +138,7 @@
       break;
       default:
        debug('Unknown raw :'.$oLine);
-       
-      ModuleManager::dispatch('onRaw', $oLine[0], $oLine[1]);
+       ModuleManager::dispatch('onRaw', $oLine[0], $oLine[1]);
      }
     break;
     default:
@@ -205,20 +167,6 @@
   }
   
   private function handleWhoLine(ParsedMask $oWho, $sTarget, $sFlags, $sDescription) {
-   $oUser =& ChannelUsers::findByMask($oWho);
-   $bNew = ($oUser === null);
-   
-   if ($bNew) {
-    $oUser = new ChannelUser($oWho);
-   }
-   
-   $oUser->setFlags($sFlags);
-   $oUser->setDescription($sDescription);
-   
-   if ($bNew) {
-    ChannelUsers::add($oUser);
-   }
-   
    ModuleManager::dispatch('onWhoLine', $oWho, $sTarget, $sFlags, $sDescription);
   }
   
@@ -227,79 +175,24 @@
   }
 
   private function handleJoin(ParsedMask $oWho, $sChannel) {
-   $this->msg($sChannel, '[join] nick : '.$oWho->getNick().' || user : '.$oWho->getUser().' || host : '.$oWho->getHost());
-   
-   if ($oWho->getNick() == $this->aConfiguration['nick']) {
-    $this->bWho = true;
-    //$this->who($sChannel);
-   }
-   
-   $oUser =& ChannelUsers::findByMask($oWho); //ChannelUsers::findByUserAndHost($oWho);
-   
-   if ($oUser) {
-    if ($oUser->inNetsplit()) {
-     //$oUser->setNick($oWho->getNick());
-     $oUser->setNetsplit(false);
-     $this->msg($oUser->getNick(), _('You were reconnected without penalties after netsplit'));
-    }
-   } else {
-    ChannelUsers::add(new ChannelUser($oWho));
-   }
-   
    ModuleManager::dispatch('onJoin', $oWho, $sChannel);
   }
   
   private function handlePart(ParsedMask $oWho, $sChannel, $sMessage) {
-   $this->msg($sChannel, '[part] nick : '.$oWho->getNick().' || user : '.$oWho->getUser().' || host : '.$oWho->getHost().' || message : '.$sMessage);
-   
-   $oUser =& ChannelUsers::findByMask($oWho);
-   if ($oUser) {
-    ChannelUsers::del($oUser);
-   }
-   
    ModuleManager::dispatch('onPart',$oWho, $sChannel, $sMessage);
   }
   
-  private function handleKick(ParsedMask $oWho, $sChannel, $sToNick, $sMessage) {
-   $this->msg($sChannel, '[kick] nick : '.$oWho->getNick().' || user : '.$oWho->getUser().' || host : '.$oWho->getHost().' || to : '.$sToNick.' || message : '.$sMessage);
-   
-   $oUser =& ChannelUsers::findByMask($oWho);
-   if ($oUser) {
-    ChannelUsers::del($oUser);
-   }
-   
+  private function handleKick(ParsedMask $oWho, $sChannel, $sToNick, $sMessage) {   
    ModuleManager::dispatch('onKick', $oWho, $sChannel, $sToNick, $sMessage);
   }
   
   private function handleQuit(ParsedMask $oWho, $sMessage) {
-   // @todo : if $sMessage == "Registered" (on quakenet) : Don't add pentalties
-   $this->msg($this->aConfiguration['channel'], '[quit] nick : '.$oWho->getNick().' || user : '.$oWho->getUser().' || host : '.$oWho->getHost().' || message : '.$sMessage);
-   
-   $bNetsplit = (bool)preg_match($this->aConfiguration['netsplit'], $sMessage);
-   
-   $oUser =& ChannelUsers::findByMask($oWho);
-   if ($oUser) {
-    if ($bNetsplit) {
-     $oUser->setNetsplit(time());
-    } else {
-     ChannelUsers::del($oUser);
-    }
-   }
-   
    ModuleManager::dispatch('onQuit', $oWho, $sMessage);
   }
   
   private function handleNick(ParsedMask $oWho, $sNewNick) {
-   $bMe = false;
    if ($oWho->getNick() === $this->aConfiguration['nick']) { // If it's the nickname of the bot, we change it in the configuration
     $this->aConfiguration['nick'] = $sNewNick;
-    $bMe = true;
-   }
-   $this->msg($this->aConfiguration['channel'], '[nick] nick : '.$oWho->getNick().' || user : '.$oWho->getUser().' || host : '.$oWho->getHost().' || newnick : '.$sNewNick.' || me : '.($bMe ? 'Y' : 'N'));
-   
-   $oUser =& ChannelUsers::findByMask($oWho);
-   if ($oUser) {
-    $oUser->setNick($sNewNick);
    }
    
    ModuleManager::dispatch('onNick', $oWho, $sNewNick);
