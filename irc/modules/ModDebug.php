@@ -33,11 +33,13 @@
   public function onQuit(ParsedMask $oWho, $sMessage){
    $this->msg($this->aConfiguration['channel'], '[quit] nick : '.$oWho->getNick().' || user : '.$oWho->getUser().' || host : '.$oWho->getHost().' || message : '.$sMessage);
   }
-  public function onNick(ParsedMask $oWho, $sNewNick){}
+  public function onNick(ParsedMask $oWho, $sNewNick){
+   $this->msg($this->aConfiguration['channel'], '[nick] nick : '.$oWho->getNick().' || user : '.$oWho->getUser().' || host : '.$oWho->getHost().' || newnick : '.$sNewNick);
+  }
   public function onNotice(ParsedMask $oWho, $sTarget, $sMessage){}
   public function onAction(ParsedMask $oWho, $sTarget, $sMessage){}
   public function onCtcpReply(ParsedMask $oWho, $sTarget, $sMessage){}
-  public function onNamesLine($sChannel, array $aUsers){print_r(func_get_args());}
+  public function onNamesLine($sChannel, array $aUsers){}
   public function onRaw($iRaw, $sArguments){}
   public function onEndOfWho($sTarget){}
  }
