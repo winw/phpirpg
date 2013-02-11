@@ -20,12 +20,10 @@
   public function tick() {
    if (microtime(true) >= $this->iNextDelay) {
     if ($this->iCount === null) {
-     $oClosure =& $this->oClosure; // Fix php bug
-     $oClosure();
+     call_user_func($this->oClosure); // Fix php bug
      $this->updateDelay();
     } else if ($this->iCount > 0) {
-     $oClosure =& $this->oClosure;
-     $oClosure();
+     call_user_func($this->oClosure); // Fix php bug
      if (--$this->iCount == 0) {
       $this->iNextDelay = 0;
      } else {
