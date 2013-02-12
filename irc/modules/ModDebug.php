@@ -1,6 +1,11 @@
 <?php
  class ModDebug extends Module {
   public function onLoad() {
+  /*
+   $oTimer = new Timer(30, 0, function() {
+    $this->msg($this->getGameChannel(), 'Timer 30s : '.date('H:i:s'));
+   });
+   TimerManager::add('test30s', $oTimer);*/
    echo "hello, i am loaded !\n";
   }
   
@@ -11,14 +16,12 @@
     $this->msg($sTarget, 'coucou !');
    } else if ($sMessage == '!q') {
     $this->quit('Restart ?');
+   } else if ($sMessage == '!l') {
+    $this->msg($this->getGameChannel(), 'id:'.$this->getUserId($oWho));
    }
   }
   
-  public function onCtcp(ParsedMask $oWho, $sTarget, $sMessage){
-   if (!strcasecmp($sMessage, 'VERSION')) {
-    $this->ctcpReply($oWho->getNick(), 'VERSION phpirpg beta');
-   }
-  }
+  public function onCtcp(ParsedMask $oWho, $sTarget, $sMessage){}
   
   public function onWhoLine(ParsedMask $oWho, $sTarget, $sFlags, $sDescription){}
   public function onJoin(ParsedMask $oWho, $sChannel){
