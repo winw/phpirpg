@@ -22,7 +22,9 @@
     $oChannelUser = $oChannelUsers->create();
     $oChannelUser->channel = $sChannel;
     $oChannelUser->nick = $oWho->getNick();
-   } else if ($sChannel == $this->getGameChannel()) {
+    $oChannelUser->id_irpg_user = new dbDontEscapeString('NULL');
+    $oChannelUser->date_autologin = new dbDontEscapeString('NULL');
+   } else if ($this->isGameChannel($sChannel)) {
     if ($oChannelUser->autologin) {
      // Auto login user
      $oChannelUser->date_autologin = new dbDontEscapeString('NULL');
@@ -32,7 +34,7 @@
    $oChannelUser->host = $oWho->getHost();
    $oChannelUser->save();
    
-   if ($oWho->getNick() === $this->getMyNick()) {
+   if ($this->isMe($oWho->getNick())) {
     $this->bInWho = true;
     $this->who($sChannel);
    }
@@ -56,7 +58,7 @@
    $oChannelUsers = new dbChannelUsers();
    if ($aoChannelUsers = $oChannelUsers->writable()->select()->where('nick = ?', $oWho->getNick())->fetchAll()) {
     foreach ($aoChannelUsers as $oChannelUser) {
-     if ($oChannelUser->channel == $this->getGameChannel()) {
+     if ($this->isGameChannel($oChannelUser->channel)) {
       if ($sMessage == '*.net *.split' || $sMessage == 'registered') {
        $oChannelUser->date_autologin = new dbDontEscapeString('NOW()');
        $oChannelUser->save();
@@ -82,16 +84,16 @@
     
     $aWasLoggedUsers = array();
     
-    if ($aoChannelUsers = $oChannelUsers->select('CONCAT(nick, "!", user, "@", host) AS mask, id_irpg_user')->where('channel = ? AND NOT ISNULL(id_irpg_user) AND (ISNULL(date_autologin) OR DATE_ADD(date_autologin, INTERVAL 10 MINUTE) > NOW())', $this->getGameChannel())->fetchAll()) {
+    if ($aoChannelUsers = $oChannelUsers->select('CONCAT(nick, "!", user, "@", host) AS mask, id_irpg_user')->where('channel = ? AND NOT ISNULL(id_irpg_user) AND DATE_ADD(date_autologin, INTERVAL 10 MINUTE) > NOW()', $this->getGameChannel())->fetchAll()) {
      foreach ($aoChannelUsers as $oChannelUser) {
       $aWasLoggedUsers[(string)$oChannelUser->mask] = (int)$oChannelUser->id_irpg_user;
      }
     }
-    
+
     $this->oInstance->exec('TRUNCATE TABLE channel_users;');
-    
+
     foreach ($this->aWhoBuffer as $aWhoUser) {
-     if ($sTarget === $aWhoUser[1]) { // On sait jamais
+     if ($sTarget == $aWhoUser[1]) { // On sait jamais
       $oWho = $aWhoUser[0];
 
       $oChannelUser = $oChannelUsers->create();
@@ -101,8 +103,13 @@
       $oChannelUser->user = $oWho->getUser();
       $oChannelUser->host = $oWho->getHost();
       
-      if (isset($aWasLoggedUser[$oWho])) { // Relog automatique
-       $oChannelUser->id_irpg_user = $aWasLoggedUser[$oWho];
+      if (isset($aWasLoggedUsers[(string)$oWho])) { // Relog automatique
+       $oChannelUser->id_irpg_user = $aWasLoggedUsers[(string)$oWho];
+       $oChannelUser->date_autologin = new dbDontEscapeString('NULL');
+       $this->msg($this->getGameChannel(), 'autorelogged : '.$oWho);
+      } else {
+       $oChannelUser->id_irpg_user = new dbDontEscapeString('NULL');
+       $oChannelUser->date_autologin = new dbDontEscapeString('NULL');
       }
       
       $oChannelUser->save();
