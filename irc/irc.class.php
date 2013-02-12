@@ -3,6 +3,10 @@
   private $oCore;
   private $bConnected = false; // true if 001 raw was retieved
   public $aConfiguration = array();
+  public $aServerConfiguration = array(
+   'chantypes' => array('&', '#'),
+   'prefix' => array('o' => '@', 'v' => '+')
+  );
   private $aModules = array('ModChannelUsers', 'ModCore', 'ModDebug');
   
   public function __construct(Core &$oCore, array $aConfiguration) {
@@ -82,6 +86,20 @@
        $this->bConnected = true;
        debug('Connected');
       break;
+      case 005:
+      if (preg_match('#CHANTYPES=([^ ]+)#', $oLine[1], $aRegs)) {
+       $this->aServerConfiguration['chantypes'] = str_split($aRegs[1]);
+      }
+      if (preg_match('#PREFIX=(.+?)\((.+?)\)#', $oLine[1], $aRegs)) {
+       if (($iModes = strlen($aRegs[1])) == strlen($aRegs[2])) {
+        $aPrefixs = array();
+        for ($i = 0; $i < $iModes; ++$i) {
+         $aPrefixs[$aRegs[1][$i]] = $aRegs[2][$i];
+        }
+        $this->aServerConfiguration['prefix'] = $aPrefixs;
+       }
+      }
+      break;
       case 315: // End of who
        $aArgs = explode(' ', $oLine[1]);
        if (isset($aArgs[1])) {
@@ -109,7 +127,7 @@
         
         foreach (explode(' ', $aRegs[2]) as $sUser) {
          $sFlag = '';
-         if (in_array($sUser[0], array('+', '%', '@', '&', '~'))) {
+         if (in_array($sUser[0], $this->aServerConfiguration['prefix'])) {
           $sFlag = $sUser[0];
           $sUser = substr($sUser, 1);
          }
