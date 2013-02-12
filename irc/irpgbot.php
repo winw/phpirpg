@@ -1,7 +1,11 @@
-#!/usr/bin/php -ddisplay_errors=1; -dsafe_mode=0; -derror_reporting=-1
+#!../php/php -ddisplay_errors=1; -dsafe_mode=0; -derror_reporting=-1
 <?php
+ if (version_compare(PHP_VERSION, '5.4.0', '<')) {
+  die("php >= 5.4.0 is required\n");
+ }
  set_time_limit(0);
  ignore_user_abort(false);
+ date_default_timezone_set('Europe/Paris');
 
  define('BASE_PATH', __DIR__.'/');
  
@@ -30,7 +34,7 @@
  require_once 'inc/mysqlman/dbObject.class.php';
  
  /* Création des instances pdo */
- $oPdo = new PDO('mysql:dbname=phpirpg;host=localhost', 'root', 'toor', Array(
+ $oPdo = new PDO('mysql:dbname=phpirpg;host=localhost;socket=/var/run/mysqld/mysqld.sock', 'root', 'toor', Array(
   PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
  ));
  dbInstance::create('site', $oPdo);
