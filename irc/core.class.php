@@ -76,7 +76,7 @@
      } else if (preg_match("/^\x01(.*)\x01$/", $aRegs[3], $aRegs2)) {
       return new ParsedLine($sLine, 'CTCP', array($aRegs[1], $aRegs[2], $aRegs2[1]));
      } else {
-      return new ParsedLine($sLine, 'MSG', array($aRegs[1], $aRegs[2], $aRegs[1]));
+      return new ParsedLine($sLine, 'MSG', array($aRegs[1], $aRegs[2], $aRegs[3]));
      }
      
     } else if (preg_match('/^:([^ ]+) NOTICE ([^ ]+) :(.*)$/', $sLine, $aRegs)) {
@@ -84,7 +84,7 @@
      if (preg_match("/^\x01(.*)\x01$/", $aRegs[3], $aRegs2)) {
       return new ParsedLine($sLine, 'CTCPREPLY', array($aRegs[1], $aRegs[2], $aRegs2[1]));
      } else {
-      return new ParsedLine($sLine, 'NOTICE', array($aRegs[1], $aRegs[2], $aRegs[1]));
+      return new ParsedLine($sLine, 'NOTICE', array($aRegs[1], $aRegs[2], $aRegs[3]));
      }
      
     } else if (preg_match('/^:([^ ]+) KICK ([^ ]+) ([^ ]+)(?:\s:)?(.*)?$/', $sLine, $aRegs)) { //>> :win!~win@warriorhouse.net KICK #win Shiwang :TRAITRE

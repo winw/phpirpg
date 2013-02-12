@@ -20,6 +20,18 @@
    return $this->oIrc->aConfiguration['channel'];
   }
   
+  public function isChannel($sTarget) {
+   return (in_array(substr($sTarget, 0, 1), $this->oIrc->aServerConfiguration['chantypes'], true));
+  }
+  
+  public function isMe($sTarget) {
+   return $this->getMyNick() === $sTarget;
+  }
+  
+  public function isGameChannel($sChannel) {
+   return $this->getGameChannel() === $sChannel;
+  }
+  
   abstract public function onLoad();
   abstract public function onMsg(ParsedMask $oWho, $sTarget, $sMessage);
   abstract public function onNotice(ParsedMask $oWho, $sTarget, $sMessage);
