@@ -10,14 +10,10 @@
   }
   
   public function onMsg(ParsedMask $oWho, $sTarget, $sMessage) {
-   if ($sMessage == '!x') {
-    ChannelUsers::debug();
-   } else if ($sMessage == '!y') {
+   if ($sMessage == '!y') {
     $this->msg($sTarget, 'coucou !');
    } else if ($sMessage == '!q') {
     $this->quit('Restart ?');
-   } else if ($sMessage == '!l') {
-    $this->msg($this->getGameChannel(), 'id:'.$this->getUserId($oWho));
    }
   }
   
