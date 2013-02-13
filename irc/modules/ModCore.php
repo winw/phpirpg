@@ -48,8 +48,8 @@
    $oIrpgUsers = new dbIrpgUsers();
    
    if ($this->isGameChannel($sTarget)) {
-    if ($oUser->isLogged()) {
-     //addPenalties($oUser)
+    if ($oCurrentUser->isLogged()) {
+     //addPenalties($oCurrentUser)
     }
    } else if ($this->isMe($sTarget)) {
     $aTokens = explode(' ', $sMessage);
