@@ -34,8 +34,8 @@
  require_once 'inc/mysqlman/dbObject.class.php';
  
  /* Création des instances pdo */
- $oPdo = new PDO('mysql:dbname=phpirpg;host=localhost;socket=/var/run/mysqld/mysqld.sock', 'root', 'toor', Array(
-  PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+ $oPdo = new PDO('mysql:dbname=phpirpg;host=localhost;charset=utf8;socket=/var/run/mysqld/mysqld.sock', 'root', 'toor', Array(
+  PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
  ));
  dbInstance::create('site', $oPdo);
  
@@ -93,8 +93,7 @@
     'ip' => SERVER_IP,
     'port' => SERVER_PORT
    ))) {
-    $oIrc->connected();
-    for (; $oCore->isConnected(); usleep(10000)) { // 1/100ème de seconde
+    for ($oIrc->connected(); $oCore->isConnected(); usleep(10000)) { // 1/100ème de seconde
      for (; ($oLine = $oCore->parseLine()) !== null; usleep(10000)) { // Lecture de 100lignes/seconde
       $oIrc->parse($oLine);
      }
