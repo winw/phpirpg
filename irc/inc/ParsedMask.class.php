@@ -1,5 +1,5 @@
 <?php
- class parsedMask {
+ class ParsedMask {
   private $sHost = '';
   private $sNick = '';
   private $sUser = '';
