@@ -15,6 +15,8 @@
  
  require_once 'inc/ParsedMask.class.php';
  
+ require_once 'inc/Map.class.php';
+ 
  require_once 'inc/Module.class.php';
  
  require_once 'inc/Timer.class.php';
@@ -109,6 +111,8 @@
   $oCore->disconnect();
   
   $oIrc->disconnected();
+  
+  TimerManager::clear();
   
   sleep(30); // On attend 30s avant la reconnection
  }

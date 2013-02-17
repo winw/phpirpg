@@ -30,5 +30,9 @@
     }
    }
   }
+  
+  public static function clear() {
+   self::$aoTimers = array();
+  }
  }
 ?>
