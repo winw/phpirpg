@@ -1,30 +1,33 @@
 <?php
  class IrpgUser {
   private $iIdUser = null;
-  private $sGameChannel = '#win';
   private $oWho;
   
-  public function __construct(ParsedMask $oWho) {
+  public function __construct(ParsedMask $oWho) {   
+   $this->oWho = $oWho;
+   $this->refresh();
+  }
+  
+  private function __clone(){}
+  
+  public function refresh() {
    $oChannelUsers = new dbChannelUsers();
-   if ($oChannelUser = $oChannelUsers->select('id_irpg_user')->where('channel = ? AND nick = ? AND user = ? AND host = ?', $this->sGameChannel, $oWho->getNick(), $oWho->getUser(), $oWho->getHost())->fetch()) {
+   if ($oChannelUser = $oChannelUsers->select('id_irpg_user')->where('channel = ? AND nick = ? AND user = ? AND host = ?', IRPG_CHANNEL, $this->oWho->getNick(), $this->oWho->getUser(), $this->oWho->getHost())->fetch()) {
     if ($oChannelUser->id_irpg_user) {
      $this->iIdUser = (int)$oChannelUser->id_irpg_user;
     }
    }
-   $this->oWho = $oWho;
   }
   
   public function isLogged() {
    return $this->iIdUser !== null;
   }
   
-  public function setId($iId) {
-   if (!$this->isLogged()) {
-    $oChannelUsers = new dbChannelUsers();
-    if ($oChannelUser = $oChannelUsers->writable()->select()->where('channel = ? AND nick = ? AND user = ? AND host = ?', $this->sGameChannel, $this->oWho->getNick(), $this->oWho->getUser(), $this->oWho->getHost())->fetch()) {
-     $oChannelUser->id_irpg_user = $iId;
-     $oChannelUser->save();
-     $this->iIdUser = $Id;
+  public function getCoords() {
+   if ($this->isLogged()) {
+    $oIrpgUsers = new dbIrpgUsers();
+    if ($oIrpgUser = $oIrpgUsers->select('x, y')->where('id = ?', $this->iIdUser)->fetch()) {
+     return array('x' => $oIrpgUser->x, 'y' => $oIrpgUser->y);
     }
    }
   }
@@ -40,8 +43,6 @@
     $this->ctcpReply($oWho->getNick(), 'VERSION phpirpg beta');
    }
   }
-  
-  public function onLoad(){}
   
   public function onMsg(ParsedMask $oWho, $sTarget, $sMessage){
    $oCurrentUser = new IrpgUser($oWho);
@@ -80,10 +81,12 @@
           $oIrpgUser->email = $sEmail;
           $oIrpgUser->save();
           $this->msg($oWho->getNick(), 'Ok, your account is successfully created');
-          $oCurrentUser->setId((int)$oIrpgUser->id);
+          
+          $this->doUserLogin($oWho, (int)$oIrpgUser->id);
+          
           // Login procedure
          } catch (Exception $e) {
-          $this->msg($oWho->getNick(), 'An error occured where creating your account, please try again later');
+          $this->msg($oWho->getNick(), 'An error occured when creating your account, please try again later');
          }
         }
        }
@@ -95,13 +98,14 @@
         $this->msg($oWho->getNick(), 'Syntax: LOGIN <login> <password>');
        } else {
         list(,$sLogin, $sPassword) = $aTokens;
-        $oUser = $oIrpgUsers->select('id')->where('login = ? AND password = ?', $sLogin, self::encodePassword($sPassword))->fetch();
-        if (!$oUser) {
+        $oIrpgUser = $oIrpgUsers->select('id')->where('login = ? AND password = ?', $sLogin, self::encodePassword($sPassword))->fetch();
+        if (!$oIrpgUser) {
          $this->msg($oWho->getNick(), 'Wrong login and/or password');
         } else {
          // Login procedure
          $this->msg($oWho->getNick(), 'Ok, login successfull');
-         $oCurrentUser->setId((int)$oUser->id);
+         
+         $this->doUserLogin($oWho, (int)$oIrpgUser->id);
         }
        }
       break;
@@ -111,6 +115,24 @@
     }
    }
   }
+  
+  public function doUserLogin(ParsedMask $oWho, $iIdIrpgUser, $bSilent = false) {
+   $oChannelUsers = new dbChannelUsers();
+   $oIrpgUsers = new dbIrpgUsers();
+   if ($oChannelUser = $oChannelUsers->writable()->select()->where('channel = ? AND nick = ? AND user = ? AND host = ?', IRPG_CHANNEL, $oWho->getNick(), $oWho->getUser(), $oWho->getHost())->fetch()) {
+    $oChannelUser->id_irpg_user = $iIdIrpgUser;
+    $oChannelUser->save();
+    if ($oIrpgUser = $oIrpgUsers->writable()->select()->where('id = ?', $iIdIrpgUser)->fetch()) {
+     $oIrpgUser->date_login = new dbDontEscapeString('NOW()');
+     $oIrpgUser->save();
+     if (!$bSilent) {
+      $this->msg(IRPG_CHANNEL, $oWho->getNick().' is now online with username '.$oIrpgUser->login);
+     }
+     ModuleManager::dispatch('onUserLogin', $oWho, (int)$oIrpgUser->id);
+    }
+   }
+  }
+  
   public function onWhoLine(ParsedMask $oWho, $sTarget, $sFlags, $sDescription){}
   public function onJoin(ParsedMask $oWho, $sChannel){}
   public function onPart(ParsedMask $oWho, $sChannel, $sMessage){}
@@ -123,5 +145,6 @@
   public function onNamesLine($sChannel, array $aUsers){}
   public function onRaw($iRaw, $sArguments){}
   public function onEndOfWho($sTarget){}
+  public function onLoad(){}
  }
 ?>

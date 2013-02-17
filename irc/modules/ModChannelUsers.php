@@ -78,7 +78,7 @@
    }
   }
 
-  public function onEndOfWho($sTarget){
+  public function onEndOfWho($sTarget){ // Normalement c'est exécute qu'une fois lorsque le bot join le salon
    if ($this->bInWho) {
     $oChannelUsers = new dbChannelUsers();
     
@@ -106,19 +106,23 @@
       if (isset($aWasLoggedUsers[(string)$oWho])) { // Relog automatique
        $oChannelUser->id_irpg_user = $aWasLoggedUsers[(string)$oWho];
        $oChannelUser->date_autologin = new dbDontEscapeString('NULL');
-       $this->msg($this->getGameChannel(), 'autorelogged : '.$oWho);
+       $oChannelUser->save();
+       
+       ModuleManager::dispatch('doUserLogin', $oWho, $aWasLoggedUsers[(string)$oWho], true);
       } else {
        $oChannelUser->id_irpg_user = new dbDontEscapeString('NULL');
        $oChannelUser->date_autologin = new dbDontEscapeString('NULL');
+       $oChannelUser->save();
       }
-      
-      $oChannelUser->save();
+
      }
     }
     // A ce point, liste des utilisateurs présents sur le salon est à jour
     
     $this->aWhoBuffer = array();
     $this->bInWho = false;
+    
+    ModuleManager::dispatch('onUserListUpdated');
    }
   }
   
