@@ -81,7 +81,6 @@
   }
   
   public function getZone($iX, $iY) {
-   print_r($this->aoAreas);
    foreach ($this->aoAreas as &$oArea) {
     if ($oArea->in($iX, $iY)) {
      return $oArea->getZone();

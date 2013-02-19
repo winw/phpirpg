@@ -4,6 +4,33 @@
   
   public function onLoad(){
    $this->oMap = new Map(BASE_PATH.'maps/map-quest');
+   
+   $oTimer = new Timer(10, 0, function(){
+    $oIrpgUsers = new dbIrpgUsers();
+    $aoIrpgUsers = $oIrpgUsers->writable()->select('id, x, y')->where('irpg_users.id IN (SELECT channel_users.id_irpg_user FROM channel_users WHERE id IS NOT NULL)')->fetchAll();
+    
+    foreach ($aoIrpgUsers as &$oIrpgUser) {
+     $iRandX = rand(-2, 2); // Ajuster en fonction des stats du personnage
+     $iRandY = rand(-2, 2); // Idem
+     
+     $iNewX = ($oIrpgUser->x + $iRandX) % $this->oMap->getWidth();
+     if ($iNewX < 0) {
+      $iNewX = $this->oMap->getWidth() + $iNewX;
+     }
+     
+     $iNewY = ($oIrpgUser->y + $iRandY) % $this->oMap->getHeight();
+     if ($iNewY < 0) {
+      $iNewY = $this->oMap->getHeight() + $iNewY;
+     }
+     
+     $oIrpgUser->x = $iNewX;
+     $oIrpgUser->y = $iNewY;
+     
+     $oIrpgUser->save();
+    }
+   });
+   
+   TimerManager::add(__CLASS__.'move', $oTimer);
   }
   
   public function onUserMove(ParsedMask $oWho, $iIrpgUserId, $iX, $iY, $iNewX, $iNewY) {
