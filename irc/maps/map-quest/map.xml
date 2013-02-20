@@ -1,54 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<map width="759" height="580">
-<areas>
-<area shape="rect" coords="102,78,309,132" href="city" />
-<area shape="rect" coords="125,54,156,78" href="city" />
-<area shape="rect" coords="228,54,334,78" href="city" />
-<area shape="rect" coords="307,31,358,54" href="city" />
-<area shape="rect" coords="78,132,286,251" href="city" />
-<area shape="rect" coords="286,197,309,251" href="city" />
-<area shape="rect" coords="309,221,334,251" href="city" />
-<area shape="rect" coords="253,251,358,277" href="city" />
-<area shape="rect" coords="358,251,406,302" href="city" />
-<area shape="rect" coords="656,276,712,302" href="desert" />
-<area shape="rect" coords="557,276,613,302" href="desert" />
-<area shape="rect" coords="406,302,759,580" href="desert" />
-<area shape="rect" coords="380,400,406,452" href="desert" />
-<area shape="rect" coords="358,529,406,580" href="desert" />
-<area shape="rect" coords="380,506,406,529" href="desert" />
-<area shape="rect" coords="406,279,434,302" href="desert" />
-<area shape="rect" coords="613,276,656,302" href="empire" />
-<area shape="rect" coords="712,276,759,302" href="empire" />
-<area shape="rect" coords="504,276,557,302" href="empire" />
-<area shape="rect" coords="504,0,759,276" href="empire" />
-<area shape="rect" coords="407,0,504,31" href="empire" />
-<area shape="rect" coords="450,31,504,77" href="empire" />
-<area shape="rect" coords="478,77,504,107" href="empire" />
-<area shape="rect" coords="434,251,478,302" href="empire" />
-<area shape="rect" coords="478,197,504,302" href="empire" />
-<area shape="rect" coords="406,251,434,279" href="empire" />
-<area shape="rect" coords="450,225,478,251" href="empire" />
-<area shape="rect" coords="450,77,478,225" href="lake" />
-<area shape="rect" coords="478,107,504,197" href="lake" />
-<area shape="rect" coords="286,132,309,197" href="lake" />
-<area shape="rect" coords="358,31,450,251" href="lake" />
-<area shape="rect" coords="334,54,358,251" href="lake" />
-<area shape="rect" coords="309,78,334,221" href="lake" />
-<area shape="rect" coords="78,300,104,406" href="mountain" />
-<area shape="rect" coords="104,556,358,580" href="mountain" />
-<area shape="rect" coords="78,453,104,580" href="mountain" />
-<area shape="rect" coords="78,54,125,78" href="mountain" />
-<area shape="rect" coords="156,54,228,78" href="mountain" />
-<area shape="rect" coords="78,31,307,54" href="mountain" />
-<area shape="rect" coords="0,31,78,580" href="mountain" />
-<area shape="rect" coords="0,0,407,31" href="mountain" />
-<area shape="rect" coords="78,78,102,132" href="mountain" />
-<area shape="rect" coords="104,277,358,556" href="wood" />
-<area shape="rect" coords="78,251,253,277" href="wood" />
-<area shape="rect" coords="380,452,406,506" href="wood" />
-<area shape="rect" coords="380,302,406,400" href="wood" />
-<area shape="rect" coords="358,302,380,529" href="wood" />
-<area shape="rect" coords="78,406,104,453" href="wood" />
-<area shape="rect" coords="78,277,104,300" href="wood" />
-</areas>
+<map width="960" height="735">
+ <areas>
+  <area shape="rect" coords="127,95,389,160" href="city" />
+  <area shape="rect" coords="161,66,191,95" href="city" />
+  <area shape="rect" coords="288,66,419,95" href="city" />
+  <area shape="rect" coords="388,34,448,66" href="city" />
+  <area shape="rect" coords="96,160,358,318" href="city" />
+  <area shape="rect" coords="358,250,389,318" href="city" />
+  <area shape="rect" coords="389,283,419,318" href="city" />
+  <area shape="rect" coords="320,318,448,351" href="city" />
+  <area shape="rect" coords="448,317,512,383" href="city" />
+  <area shape="rect" coords="704,351,769,384" href="desert" />
+  <area shape="rect" coords="830,351,899,384" href="desert" />
+  <area shape="rect" coords="512,384,960,735" href="desert" />
+  <area shape="rect" coords="477,508,512,576" href="desert" />
+  <area shape="rect" coords="477,640,512,735" href="desert" />
+  <area shape="rect" coords="448,672,477,705" href="desert" />
+  <area shape="rect" coords="512,350,545,384" href="desert" />
+  <area shape="rect" coords="769,351,830,384" href="empire" />
+  <area shape="rect" coords="636,351,704,384" href="empire" />
+  <area shape="rect" coords="899,351,960,384" href="empire" />
+  <area shape="rect" coords="636,0,960,351" href="empire" />
+  <area shape="rect" coords="517,0,636,34" href="empire" />
+  <area shape="rect" coords="573,34,636,98" href="empire" />
+  <area shape="rect" coords="605,98,636,131" href="empire" />
+  <area shape="rect" coords="545,317,605,384" href="empire" />
+  <area shape="rect" coords="605,255,636,384" href="empire" />
+  <area shape="rect" coords="512,317,545,350" href="empire" />
+  <area shape="rect" coords="573,284,605,317" href="empire" />
+  <area shape="rect" coords="573,98,605,284" href="lake" />
+  <area shape="rect" coords="605,131,636,255" href="lake" />
+  <area shape="rect" coords="358,160,389,250" href="lake" />
+  <area shape="rect" coords="448,34,573,317" href="lake" />
+  <area shape="rect" coords="419,66,448,318" href="lake" />
+  <area shape="rect" coords="389,95,419,283" href="lake" />
+  <area shape="rect" coords="96,382,130,511" href="mountain" />
+  <area shape="rect" coords="96,573,130,705" href="mountain" />
+  <area shape="rect" coords="0,705,477,735" href="mountain" />
+  <area shape="rect" coords="96,66,161,95" href="mountain" />
+  <area shape="rect" coords="191,66,288,95" href="mountain" />
+  <area shape="rect" coords="96,34,388,66" href="mountain" />
+  <area shape="rect" coords="0,34,96,705" href="mountain" />
+  <area shape="rect" coords="0,0,517,34" href="mountain" />
+  <area shape="rect" coords="96,95,127,160" href="mountain" />
+  <area shape="rect" coords="130,351,448,705" href="wood" />
+  <area shape="rect" coords="96,318,320,351" href="wood" />
+  <area shape="rect" coords="477,576,512,640" href="wood" />
+  <area shape="rect" coords="477,383,512,508" href="wood" />
+  <area shape="rect" coords="448,383,477,672" href="wood" />
+  <area shape="rect" coords="96,511,130,573" href="wood" />
+  <area shape="rect" coords="96,351,130,382" href="wood" />
+ </areas>
 </map>

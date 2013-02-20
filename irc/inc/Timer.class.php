@@ -1,18 +1,18 @@
 <?php
  class Timer {
-  private $oClosure;
+  private $mCallback;
   private $iDelay;
   private $iCount;
   private $iNextDelay;
   
-  public function __construct($iDelay, $iCount, Closure $oClosure) {
-   if (!is_numeric($iDelay) || ($iDelay < 0) || !is_numeric($iCount) || ($iCount < 0) || !is_callable($oClosure)) {
+  public function __construct($iDelay, $iCount, $mCallback) {
+   if (!is_numeric($iDelay) || ($iDelay < 0) || !is_numeric($iCount) || ($iCount < 0) || !is_callable($mCallback)) {
     throw new ArgumentException();
    }
    
    $this->iDelay = $iDelay;
    $this->iCount = $iCount == 0 ? null : $iCount;
-   $this->oClosure = $oClosure;
+   $this->mCallback = $mCallback;
    
    $this->updateDelay();
   }
@@ -20,15 +20,15 @@
   public function tick() {
    if (microtime(true) >= $this->iNextDelay) {
     if ($this->iCount === null) {
-     call_user_func($this->oClosure); // Fix php bug
      $this->updateDelay();
+     call_user_func($this->mCallback); // Fix php bug
     } else if ($this->iCount > 0) {
-     call_user_func($this->oClosure); // Fix php bug
      if (--$this->iCount == 0) {
       $this->iNextDelay = 0;
      } else {
       $this->updateDelay();
      }
+     call_user_func($this->mCallback); // Fix php bug
     }
    }
   }
