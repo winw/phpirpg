@@ -55,6 +55,10 @@
    }
   }
   
+  public function getZone($iX, $iY) {
+   return $this->oMap->getZone($iX, $iY);
+  }
+  
   public function onCtcp(ParsedMask $oWho, $sTarget, $sMessage){}
   public function onMsg(ParsedMask $oWho, $sTarget, $sMessage){
    if (preg_match('/^!z (\d+) (\d+)$/', $sMessage, $aRegs)) {
