@@ -82,6 +82,8 @@
           $oIrpgUser->save();
           $this->msg($oWho->getNick(), 'Ok, your account is successfully created');
           
+          ModuleManager::dispatch('onUserRegister', $oWho, (int)$oIrpgUser->id);
+          
           $this->doUserLogin($oWho, (int)$oIrpgUser->id);
           
           // Login procedure
@@ -98,7 +100,7 @@
         $this->msg($oWho->getNick(), 'Syntax: LOGIN <login> <password>');
        } else {
         list(,$sLogin, $sPassword) = $aTokens;
-        $oIrpgUser = $oIrpgUsers->select('id')->where('login = ? AND password = ?', $sLogin, self::encodePassword($sPassword))->fetch();
+        $oIrpgUser = $oIrpgUsers->select('id')->where('login = ? AND password = ?', $sLogin, self::encodePassword($sPassword))->fetch(); // @todo : check if someone is already logged with this account
         if (!$oIrpgUser) {
          $this->msg($oWho->getNick(), 'Wrong login and/or password');
         } else {
