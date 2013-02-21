@@ -6,24 +6,36 @@
   
   public function onLoad(){}
   
-  public function onPlayerMove($iIrpgUserId, $iOldX, $iOldY, $iNewX, $iNewY) {
-   $aXCoords = array($iNewX);
-   $aYCoords = array($iNewY);
-   
-   for ($i = 0; $i < self::HIT_ZONE; ++$i) {
-    $aXCoords[] = $iNewX+$i;
-    $aXCoords[] = $iNewX-$i;
-    $aYCoords[] = $iNewY+$i;
-    $aYCoords[] = $iNewY-$i;
-   }
+  public function onUserMove($iIrpgUserId, $iOldX, $iOldY, $iNewX, $iNewY) {
+   if (rand(0,1)) { // Une chance sur 2 de batailler
+    $aXCoords = array($iNewX);
+    $aYCoords = array($iNewY);
+    
+    $iMapWidth = ModuleManager::dispatchTo('ModMap', 'getMapWidth');
+    $iMapHeight = ModuleManager::dispatchTo('ModMap', 'getMapHeight');
+    
+    for ($i = 1; $i < self::HIT_ZONE; ++$i) {
+     $aXCoords[] = ($iNewX+$i) % $iMapWidth;
+     $iX = $iNewX - $i;
+     if ($iX < 0) {
+      $iX += $iMapWidth;
+     }
+     $aXCoords[] = $iX;
+     $aYCoords[] = ($iNewY+$i) % $iMapHeight;
+     $iY = $iNewY - $i;
+     if ($iY < 0) {
+      $iY += $iMapHeight;
+     }
+     $aYCoords[] = $iY;
+    }
 
-   $oIrpgUsers = new dbIrpgUsers();
-   // On recherche un autre joueur à proximité
-   // @todo : probabilités de combat ?
-   $oIrpgUser = $oIrpgUsers->select()->where('irpg_users.id IN (SELECT channel_users.id_irpg_user FROM channel_users WHERE channel_users.id_irpg_user IS NOT NULL AND channel_users.id_irpg_user != ?) irpg_users.x IN ('.implode($aXCoords).') AND irpg_users.y IN ('.implode($aYCoords).')', $iIrpgUserId)->order('RAND()')->fetch();
-   
-   if ($oIrpgUser) {
-    $this->doBattle($iIrpgUserId, $oIrpgUser->id, self::REASON_ENCOUNTER);
+    $oIrpgUsers = new dbIrpgUsers();
+    // On recherche un autre joueur à proximité
+    $oIrpgUser = $oIrpgUsers->select()->where('irpg_users.id IN (SELECT channel_users.id_irpg_user FROM channel_users WHERE channel_users.id_irpg_user IS NOT NULL AND channel_users.id_irpg_user != ?) AND irpg_users.x IN ('.implode(',', array_unique($aXCoords)).') AND irpg_users.y IN ('.implode(',', array_unique($aYCoords)).')', $iIrpgUserId)->order('RAND()')->fetch();
+    
+    if ($oIrpgUser) {
+     $this->doBattle($iIrpgUserId, $oIrpgUser->id, self::REASON_ENCOUNTER);
+    }
    }
   }
   

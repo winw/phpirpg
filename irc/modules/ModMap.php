@@ -8,10 +8,10 @@
    $this->oMap = new Map(BASE_PATH.'maps/map-quest');
    
    $oTimer = new Timer(self::MOVE_PLAYER_DELAY, 0, function(){
-    $this->doMovePlayers();
+    $this->doMoveUsers();
    });
    
-   TimerManager::add(__CLASS__.'doMovePlayers', $oTimer);
+   TimerManager::add(__CLASS__.'doMoveUsers', $oTimer);
   }
   
   public function onUserRegister(ParsedMask $oWho, $iIdIrpgUser) {
@@ -25,7 +25,7 @@
    }
   }
   
-  private function doMovePlayers() {
+  private function doMoveUsers() {
    $oIrpgUsers = new dbIrpgUsers();
    $aoIrpgUsers = $oIrpgUsers->writable()->select('id, x, y')->where('irpg_users.id IN (SELECT channel_users.id_irpg_user FROM channel_users WHERE channel_users.id_irpg_user IS NOT NULL)')->fetchAll();
    
@@ -38,12 +38,12 @@
     
     $iNewX = ($oIrpgUser->x + $iRandX) % $this->oMap->getWidth();
     if ($iNewX < 0) {
-     $iNewX = $this->oMap->getWidth() + $iNewX;
+     $iNewX += $this->oMap->getWidth();
     }
     
     $iNewY = ($oIrpgUser->y + $iRandY) % $this->oMap->getHeight();
     if ($iNewY < 0) {
-     $iNewY = $this->oMap->getHeight() + $iNewY;
+     $iNewY += $this->oMap->getHeight();
     }
     
     $oIrpgUser->x = $iNewX;
@@ -57,6 +57,14 @@
   
   public function getZone($iX, $iY) {
    return $this->oMap->getZone($iX, $iY);
+  }
+  
+  public function getMapWidth() {
+   return $this->oMap->getWidth();
+  }
+  
+  public function getMapHeight() {
+   return $this->oMap->getHeight();
   }
   
   public function onCtcp(ParsedMask $oWho, $sTarget, $sMessage){}
