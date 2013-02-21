@@ -9,7 +9,7 @@
     throw new Exception('Module '.$sClass.' already loaded');
    }
    
-   self::$aoModules[] = $oModule;
+   self::$aoModules[$sClass] = $oModule;
    $oModule->onLoad();
   }
   
@@ -31,15 +31,11 @@
    $sClass = array_shift($aArguments);
    $sMethod = array_shift($aArguments);
    
-   if (!in_array($sMethod, self::$aMethods)) {
-    throw new ArgumentException($sMethod);
-   }
-   
    if (!isset(self::$aoModules[$sClass])) {
     throw new Exception('Unknown module '.$sClass);
    }
    
-   if (method_exists(self::$aoModules[$sClass], $sMethod)) {
+   if (!method_exists(self::$aoModules[$sClass], $sMethod)) {
     throw new ArgumentException($sMethod);
    }
    
