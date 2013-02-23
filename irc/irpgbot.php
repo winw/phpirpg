@@ -9,6 +9,8 @@
 
  define('BASE_PATH', __DIR__.'/');
  
+ require_once 'inc/Utils.class.php';
+ 
  require_once 'inc/ParsedLine.class.php';
  
  require_once 'inc/IrcCommands.class.php';
