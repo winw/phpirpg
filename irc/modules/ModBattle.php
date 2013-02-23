@@ -1,10 +1,16 @@
 <?php
  class ModBattle extends Module {
   const HIT_ZONE = 2; // Zone autour du joueur pour qu'une rencontre soit possible
+  const NO_BATTLE = 120; // No battle for 2 minutes
   
   const REASON_ENCOUNTER = 1;
   
-  public function onLoad(){}
+  public function onLoad(){
+   $oTimer = new Timer(60, 0, function() {
+    dbInstance::get('site')->exec('UPDATE irpg_users SET date_no_battle = NULL WHERE NOW() > date_no_battle');
+   });
+   TimerManager::add(__CLASS__.'razLastBattle', $oTimer);
+  }
   
   public function onUserMove($iIrpgUserId, $iOldX, $iOldY, $iNewX, $iNewY) {
    if (rand(0,1)) { // Une chance sur 2 de batailler
@@ -31,7 +37,7 @@
 
     $oIrpgUsers = new dbIrpgUsers();
     // On recherche un autre joueur à proximité
-    $oIrpgUser = $oIrpgUsers->select()->where('irpg_users.id IN (SELECT channel_users.id_irpg_user FROM channel_users WHERE channel_users.id_irpg_user IS NOT NULL AND channel_users.id_irpg_user != ?) AND irpg_users.x IN ('.implode(',', array_unique($aXCoords)).') AND irpg_users.y IN ('.implode(',', array_unique($aYCoords)).')', $iIrpgUserId)->order('RAND()')->fetch();
+    $oIrpgUser = $oIrpgUsers->select()->where('irpg_users.id IN (SELECT channel_users.id_irpg_user FROM channel_users WHERE channel_users.id_irpg_user IS NOT NULL AND channel_users.id_irpg_user != ?) AND irpg_users.x IN ('.implode(',', array_unique($aXCoords)).') AND irpg_users.y IN ('.implode(',', array_unique($aYCoords)).') AND (irpg_users.date_no_battle IS NULL OR NOW() > irpg_users.date_no_battle)', $iIrpgUserId)->order('RAND()')->fetch();
     
     if ($oIrpgUser) {
      $this->doBattle($iIrpgUserId, $oIrpgUser->id, self::REASON_ENCOUNTER);
@@ -40,9 +46,18 @@
   }
   
   private function doBattle($iIrpgUserIdFrom, $iIrpgUserIdTo, $iReason) {
+   $oIrpgUsers = new dbIrpgUsers();
+   $oUserFrom = $oIrpgUsers->select()->writable()->where('id = ?', $iIrpgUserIdFrom)->fetch();
+   $oUserTo = $oIrpgUsers->select()->writable()->where('id = ?', $iIrpgUserIdTo)->fetch();
    if ($iReason == self::REASON_ENCOUNTER) {
     $this->msg($this->getGameChannel(), '[battle] entre #'.$iIrpgUserIdFrom.' et #'.$iIrpgUserIdTo);
    }
+   
+   $oUserFrom->date_no_battle = new DbDontEscapeString('DATE_ADD(NOW(), INTERVAL '.self::NO_BATTLE.' SECONDS)');
+   $oUserTo->date_no_battle = new DbDontEscapeString('DATE_ADD(NOW(), INTERVAL '.self::NO_BATTLE.' SECONDS)');
+   
+   $oUserFrom->save();
+   $oUserTo->save();
   }
   
   public function onCtcp(ParsedMask $oWho, $sTarget, $sMessage){}
