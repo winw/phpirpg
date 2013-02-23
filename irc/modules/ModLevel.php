@@ -11,7 +11,7 @@
   }
   
   private function calculateTimeToLevel($iLevel) {
-   return intval(self::BASE_TIME * pow(M_PI / 2, $iLevel));
+   return intval(self::BASE_TIME * pow(M_PI_2, $iLevel));
   }
 
   public function onUserRegister(ParsedMask $oWho, $iIdIrpgUser) {

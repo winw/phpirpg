@@ -101,8 +101,7 @@
      for (; ($oLine = $oCore->parseLine()) !== null; usleep(10000)) { // Lecture de 100lignes/seconde
       $oIrc->parse($oLine);
      }
-     
-     $oIrc->tick();
+
      TimerManager::tick();
     }
    }
