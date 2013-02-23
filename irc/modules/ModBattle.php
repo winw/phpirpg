@@ -2,6 +2,7 @@
  class ModBattle extends Module {
   const HIT_ZONE = 2; // Zone autour du joueur pour qu'une rencontre soit possible
   const NO_BATTLE = 120; // No battle for 2 minutes
+  const MIN_LEVEL = 10; // Minimum level for battles
   
   const REASON_ENCOUNTER = 1;
   const REASON_LEVEL_UP = 2;
@@ -38,7 +39,7 @@
 
     $oIrpgUsers = new dbIrpgUsers();
     // On recherche un autre joueur à proximité
-    $oIrpgUser = $oIrpgUsers->select('id')->where('irpg_users.id IN (SELECT channel_users.id_irpg_user FROM channel_users WHERE channel_users.id_irpg_user IS NOT NULL AND channel_users.id_irpg_user != ?) AND irpg_users.x IN ('.implode(',', array_unique($aXCoords)).') AND irpg_users.y IN ('.implode(',', array_unique($aYCoords)).') AND (irpg_users.date_no_battle IS NULL OR NOW() > irpg_users.date_no_battle)', $iIrpgUserId)->order('RAND()')->fetch();
+    $oIrpgUser = $oIrpgUsers->select('id')->where('irpg_users.id IN (SELECT channel_users.id_irpg_user FROM channel_users WHERE channel_users.id_irpg_user IS NOT NULL AND channel_users.id_irpg_user != ?) AND irpg_users.x IN ('.implode(',', array_unique($aXCoords)).') AND irpg_users.y IN ('.implode(',', array_unique($aYCoords)).') AND (irpg_users.date_no_battle IS NULL OR NOW() > irpg_users.date_no_battle) AND level >= ?', $iIrpgUserId, self::MIN_LEVEL)->order('RAND()')->fetch();
     
     if ($oIrpgUser) {
      $this->doBattle($iIrpgUserId, $oIrpgUser->id, self::REASON_ENCOUNTER);
@@ -47,12 +48,14 @@
   }
   
   public function onUserLevelUp($iIrpgUserId, $iNewLevel, $iTimeToNextLevel) {
-   $oIrpgUsers = new dbIrpgUsers();
-   // On recherche un autre joueur à tabasser :)
-   $oIrpgUser = $oIrpgUsers->select('id')->where('irpg_users.id IN (SELECT channel_users.id_irpg_user FROM channel_users WHERE channel_users.id_irpg_user IS NOT NULL AND channel_users.id_irpg_user != ?) AND (irpg_users.date_no_battle IS NULL OR NOW() > irpg_users.date_no_battle)', $iIrpgUserId)->order('RAND()')->fetch();
-   
-   if ($oIrpgUser) {
-    $this->doBattle($iIrpgUserId, $oIrpgUser->id, self::REASON_LEVEL_UP);
+   if ($iNewNevel >= self::MIN_LEVEL) {
+    $oIrpgUsers = new dbIrpgUsers();
+    // On recherche un autre joueur à tabasser :)
+    $oIrpgUser = $oIrpgUsers->select('id')->where('irpg_users.id IN (SELECT channel_users.id_irpg_user FROM channel_users WHERE channel_users.id_irpg_user IS NOT NULL AND channel_users.id_irpg_user != ?) AND (irpg_users.date_no_battle IS NULL OR NOW() > irpg_users.date_no_battle) AND level >= ?', $iIrpgUserId, self::MIN_LEVEL)->order('RAND()')->fetch();
+    
+    if ($oIrpgUser) {
+     $this->doBattle($iIrpgUserId, $oIrpgUser->id, self::REASON_LEVEL_UP);
+    }
    }
   }
   
