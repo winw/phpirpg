@@ -4,6 +4,7 @@
   const NO_BATTLE = 120; // No battle for 2 minutes
   
   const REASON_ENCOUNTER = 1;
+  const REASON_LEVEL_UP = 2;
   
   public function onLoad(){
    $oTimer = new Timer(60, 0, function() {
@@ -37,7 +38,7 @@
 
     $oIrpgUsers = new dbIrpgUsers();
     // On recherche un autre joueur à proximité
-    $oIrpgUser = $oIrpgUsers->select()->where('irpg_users.id IN (SELECT channel_users.id_irpg_user FROM channel_users WHERE channel_users.id_irpg_user IS NOT NULL AND channel_users.id_irpg_user != ?) AND irpg_users.x IN ('.implode(',', array_unique($aXCoords)).') AND irpg_users.y IN ('.implode(',', array_unique($aYCoords)).') AND (irpg_users.date_no_battle IS NULL OR NOW() > irpg_users.date_no_battle)', $iIrpgUserId)->order('RAND()')->fetch();
+    $oIrpgUser = $oIrpgUsers->select('id')->where('irpg_users.id IN (SELECT channel_users.id_irpg_user FROM channel_users WHERE channel_users.id_irpg_user IS NOT NULL AND channel_users.id_irpg_user != ?) AND irpg_users.x IN ('.implode(',', array_unique($aXCoords)).') AND irpg_users.y IN ('.implode(',', array_unique($aYCoords)).') AND (irpg_users.date_no_battle IS NULL OR NOW() > irpg_users.date_no_battle)', $iIrpgUserId)->order('RAND()')->fetch();
     
     if ($oIrpgUser) {
      $this->doBattle($iIrpgUserId, $oIrpgUser->id, self::REASON_ENCOUNTER);
@@ -45,16 +46,25 @@
    }
   }
   
+  public function onUserLevelUp($iIrpgUserId, $iNewLevel, $iTimeToNextLevel) {
+   $oIrpgUsers = new dbIrpgUsers();
+   // On recherche un autre joueur à tabasser :)
+   $oIrpgUser = $oIrpgUsers->select('id')->where('irpg_users.id IN (SELECT channel_users.id_irpg_user FROM channel_users WHERE channel_users.id_irpg_user IS NOT NULL AND channel_users.id_irpg_user != ?) AND (irpg_users.date_no_battle IS NULL OR NOW() > irpg_users.date_no_battle)', $iIrpgUserId)->order('RAND()')->fetch();
+   
+   if ($oIrpgUser) {
+    $this->doBattle($iIrpgUserId, $oIrpgUser->id, self::REASON_LEVEL_UP);
+   }
+  }
+  
   private function doBattle($iIrpgUserIdFrom, $iIrpgUserIdTo, $iReason) {
    $oIrpgUsers = new dbIrpgUsers();
    $oUserFrom = $oIrpgUsers->select()->writable()->where('id = ?', $iIrpgUserIdFrom)->fetch();
    $oUserTo = $oIrpgUsers->select()->writable()->where('id = ?', $iIrpgUserIdTo)->fetch();
-   if ($iReason == self::REASON_ENCOUNTER) {
-    $this->msg($this->getGameChannel(), '[battle] entre #'.$iIrpgUserIdFrom.' et #'.$iIrpgUserIdTo);
-   }
    
-   $oUserFrom->date_no_battle = new DbDontEscapeString('DATE_ADD(NOW(), INTERVAL '.self::NO_BATTLE.' SECONDS)');
-   $oUserTo->date_no_battle = new DbDontEscapeString('DATE_ADD(NOW(), INTERVAL '.self::NO_BATTLE.' SECONDS)');
+   $this->msg($this->getGameChannel(), '[battle] entre #'.$iIrpgUserIdFrom.' et #'.$iIrpgUserIdTo);
+   
+   $oUserFrom->date_no_battle = new DbDontEscapeString('DATE_ADD(NOW(), INTERVAL '.self::NO_BATTLE.' SECOND)');
+   $oUserTo->date_no_battle = new DbDontEscapeString('DATE_ADD(NOW(), INTERVAL '.self::NO_BATTLE.' SECOND)');
    
    $oUserFrom->save();
    $oUserTo->save();

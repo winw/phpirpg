@@ -20,7 +20,7 @@
    // Initialize level related times
    if ($oIrpgUser = $oIrpgUsers->writable()->select('id')->where('id = ?', $iIdIrpgUser)->fetch()) {
     $oIrpgUser->level = 1;
-    $oIrpgUser->time_to_level(self::calculateTimeToLevel($oIrpgUser->level));
+    $oIrpgUser->time_to_level = self::calculateTimeToLevel($oIrpgUser->level);
     $oIrpgUser->save();
    }
   }
@@ -34,14 +34,14 @@
     
     if ($iTimeToLevel > 0) {
      $oIrpgUser->time_to_level = $iTimeToLevel;
+     $oIrpgUser->save();
     } else { // Level up
      $oIrpgUser->level++;
      $oIrpgUser->time_to_level = self::calculateTimeToLevel($oIrpgUser->level);
      $oIrpgUser->save();
      $this->msg($this->getGameChannel(), '[level up] '.$oIrpgUser->login.' has attained level '.$oIrpgUser->level.'. Next level in '.Utils::duration($oIrpgUser->time_to_level));
+     ModuleManager::dispatch('onUserLevelUp', (int)$oIrpgUser->id, (int)$oIrpgUser->level, (int)$oIrpgUser->time_to_level);
     }
-    
-    $oIrpgUser->save();
    }
   }
   
