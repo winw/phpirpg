@@ -20,7 +20,6 @@
    
    if ($oIrpgUser = $oIrpgUsers->writable()->select()->where('id = ?', $iIdIrpgUser)->fetch()) {
     $iPenalties = self::getPenaltiesTime($oIrpgUser->level, $iNb);
-    $oIrpgUser->level = 1;
     $oIrpgUser->time_to_level += $iPenalties;
     $oIrpgUser->save();
     
