@@ -87,9 +87,20 @@
         $this->msg($oWho->getNick(), 'You are not logged');
        }
       break;
+      case 'WHOAMI':
+       if ($iIdIrpgUser = $this->getUserIdFromMask($oWho)) {
+        $oIrpgUser = $oIrpgUsers->select()->where('id = ?', $iIdIrpgUser)->fetch();
+        if ($oIrpgUser) {
+         $this->msg($oWho->getNick(), 'Login: '.$oIrpgUser->login.', e-mail: '.$oIrpgUser->email.', created: '.$oIrpgUser->date_created);
+         $this->msg($oWho->getNick(), 'Level: '.$oIrpgUser->level.', next level: '.Utils::duration($oIrpgUser->time_to_level).', total time idled: '.Utils::duration($oIrpgUser->time_idled));
+        }
+       } else {
+        $this->msg($oWho->getNick(), 'You are not logged');
+       }
+      break;
      }
     } else {
-     $this->msg($oWho->getNick(), 'Availables commands : REGISTER, LOGIN');
+     $this->msg($oWho->getNick(), 'Availables commands : REGISTER, LOGIN, LOGOUT, WHOAMI');
     }
    }
   }
