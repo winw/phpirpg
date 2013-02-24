@@ -8,6 +8,7 @@
   const REASON_CTCP = 6;
   const REASON_NICK = 7;
   const REASON_ACTION = 8;
+  const REASON_LOGOUT = 9;
  
   public function onLoad(){}
   
@@ -33,6 +34,7 @@
      case self::REASON_CTCP: $sMessage .= 'channel ctcp'; break;
      case self::REASON_NICK: $sMessage .= 'nick change'; break;
      case self::REASON_ACTION: $sMessage .= 'channel action'; break;
+     case self::REASON_LOGOUT: $sMessage .= 'logout'; break;
      default:
       $sMessage .= '??';
     }
@@ -41,6 +43,10 @@
     
     $this->msg($this->getGameChannel(), $sMessage);
    }
+  }
+  
+  public function onUserLogout(ParsedMask $oWho, $iIdIrpgUser) {
+   $this->doPenaltie($iIdIrpgUser, 40, self::REASON_LOGOUT);
   }
 
   public function onCtcp(ParsedMask $oWho, $sTarget, $sMessage){

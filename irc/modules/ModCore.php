@@ -72,6 +72,21 @@
         }
        }
       break;
+      case 'LOGOUT':
+       if ($iIdIrpgUser = $this->getUserIdFromMask($oWho)) {
+        $oChannelUsers = new dbChannelUsers();
+        $oChannelUser = $oChannelUsers->writable()->select()->where('id_irpg_user = ?', $iIdIrpgUser)->fetch();
+        if ($oChannelUser) {
+         $oChannelUser->id_irpg_user = new dbDontEscapeString('NULL');
+         $oChannelUser->save();
+         $this->msg($oWho->getNick(), 'Ok, login successfull');
+         
+         ModuleManager::dispatch('onUserLogout', $oWho, $iIdIrpgUser);
+        }
+       } else {
+        $this->msg($oWho->getNick(), 'You are not logged');
+       }
+      break;
      }
     } else {
      $this->msg($oWho->getNick(), 'Availables commands : REGISTER, LOGIN');
@@ -89,7 +104,7 @@
      $oIrpgUser->date_login = new dbDontEscapeString('NOW()');
      $oIrpgUser->save();
      if (!$bSilent) {
-      $this->msg(IRPG_CHANNEL, $oWho->getNick().' is now online with username '.$oIrpgUser->login);
+      $this->msg(IRPG_CHANNEL, $oWho->getNick().' is now online with username '.$oIrpgUser->login.', next level in '.Utils::duration($oIrpgUser->time_to_level));
      }
      ModuleManager::dispatch('onUserLogin', $oWho, (int)$oIrpgUser->id);
     }
