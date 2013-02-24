@@ -3,6 +3,7 @@
   private $bInWho = false;
   private $aWhoBuffer = array();
   private $oInstance;
+  private $aiOldUsers = array();
   
   public function onLoad() {
    $this->oInstance = dbInstance::get('site');
@@ -43,6 +44,7 @@
   public function onPart(ParsedMask $oWho, $sChannel, $sMessage){
    $oChannelUsers = new dbChannelUsers();
    if ($oChannelUser = $oChannelUsers->writable()->select()->where('channel = ? AND nick = ?', $sChannel, $oWho->getNick())->fetch()) {
+    $this->aiOldUsers[(string)$oWho] = (int)$oChannelUser->id_irpg_user;
     $oChannelUser->delete();
    }
   }
@@ -50,6 +52,7 @@
   public function onKick(ParsedMask $oWho, $sChannel, $sToNick, $sMessage){
    $oChannelUsers = new dbChannelUsers();
    if ($oChannelUser = $oChannelUsers->writable()->select()->where('channel = ? AND nick = ?', $sChannel, $oWho->getNick())->fetch()) {
+    $this->aiOldUsers[(string)$oWho] = (int)$oChannelUser->id_irpg_user;
     $oChannelUser->delete();
    }
   }
@@ -65,6 +68,7 @@
        continue;
       }
      }
+     $this->aiOldUsers[(string)$oWho] = (int)$oChannelUser->id_irpg_user;
      $oChannelUser->delete();
     }
    }
@@ -123,6 +127,12 @@
     $this->bInWho = false;
     
     ModuleManager::dispatch('onUserListUpdated');
+   }
+  }
+  
+  public function getOldUserIdFromMask(ParsedMask $oWho) {
+   if (isset($this->aiOldUsers[(string)$oWho])) {
+    return $this->aiOldUsers[(string)$oWho];
    }
   }
   
