@@ -32,6 +32,27 @@
    return $this->getGameChannel() === $sChannel;
   }
   
+  public function getUserIdFromMask(ParsedMask $oWho) {
+   $oChannelUsers = new dbChannelUsers();
+   if ($oChannelUser = $oChannelUsers->select('id_irpg_user')->where('channel = ? AND nick = ? AND user = ? AND host = ? AND id_irpg_user IS NOT NULL', $this->getGameChannel(), $oWho->getNick(), $oWho->getUser(), $oWho->getHost())->fetch()) {
+    return (int)$oChannelUser->id_irpg_user;
+   }
+  }
+  
+  public function getUserIdFromNick($sNick) {
+   $oChannelUsers = new dbChannelUsers();
+   if ($oChannelUser = $oChannelUsers->select('id_irpg_user')->where('channel = ? AND nick = ? AND id_irpg_user IS NOT NULL', $this->getGameChannel(), $sNick)->fetch()) {
+    return (int)$oChannelUser->id_irpg_user;
+   }
+  }
+  
+  public function getMaskFromNick($sNick) {
+   $oChannelUsers = new dbChannelUsers();
+   if ($oChannelUser = $oChannelUsers->select('CONCAT(nick, "!", user, "@", host) AS mask')->where('nick = ?', $sNick)->fetch()) {
+    return new ParsedMask((string)$oChannelUser->mask);
+   }
+  }
+  
   abstract public function onLoad();
   abstract public function onMsg(ParsedMask $oWho, $sTarget, $sMessage);
   abstract public function onNotice(ParsedMask $oWho, $sTarget, $sMessage);
