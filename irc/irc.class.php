@@ -7,7 +7,7 @@
    'chantypes' => array('&', '#'),
    'prefix' => array('o' => '@', 'v' => '+')
   );
-  private $aModules = array('ModChannelUsers', 'ModCore', 'ModLevel', 'ModItem', 'ModMap', 'ModBattle');
+  private $aModules = array('ModChannelUsers', 'ModCore', 'ModPenalties', 'ModLevel', 'ModItem', 'ModMap', 'ModBattle');
   
   public function __construct(Core &$oCore, array $aConfiguration) {
    $this->oCore = $oCore;
