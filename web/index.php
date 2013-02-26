@@ -9,7 +9,6 @@ dbClassGen::$sPath = BASE_PATH.'inc/mysqlman/db/';
  require_once 'inc/mysqlman/Utils.class.php';
  require_once 'inc/mysqlman/dbPrimitiveObject.class.php';
  
- /* Création des instances pdo */
  $oPdo = new PDO('mysql:dbname=phpirpg;host=localhost', 'root', '', Array(
   PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
   PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
@@ -17,14 +16,12 @@ dbClassGen::$sPath = BASE_PATH.'inc/mysqlman/db/';
  ));
  dbInstance::create('phpirpg', $oPdo);
  
- /* Generation des fichiers de bases de données si on est pas en prod */
  if (1) {
   foreach (dbInstance::getList() AS $sName) {
    dbClassGen::fromInstanceName($sName);
   }
  }
  
- /* Chargement des DBs */
  $aFiles = glob(dbClassGen::$sPath.'*.db.php');
  if ($aFiles) {
   foreach ($aFiles AS $sFile) {
@@ -49,7 +46,7 @@ dbClassGen::$sPath = BASE_PATH.'inc/mysqlman/db/';
 <div class="global"><?php
 if (!isset($_GET['q'])) $_GET['q'] = 'news';
 switch ($_GET['q']) {
-case 'news': include_once('inc/pages/news.php'); break;  
+case 'news': include_once('inc/pages/news.php'); break;	
 case 'map':	include_once('inc/pages/map.php'); break;
 case 'rank': include_once('inc/pages/rank.php'); break;
 case 'stats': include_once('inc/pages/stats.php'); break;
