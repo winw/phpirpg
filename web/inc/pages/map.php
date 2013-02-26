@@ -1,0 +1,1 @@
+<div class="center"><img src="inc/pict/map.png" alt="" /></div>
