@@ -79,7 +79,7 @@
         if ($oChannelUser) {
          $oChannelUser->id_irpg_user = new dbDontEscapeString('NULL');
          $oChannelUser->save();
-         $this->msg($oWho->getNick(), 'Ok, login successfull');
+         $this->msg($oWho->getNick(), 'Ok, logout successfull');
          
          ModuleManager::dispatch('onUserLogout', $oWho, $iIdIrpgUser);
         }
