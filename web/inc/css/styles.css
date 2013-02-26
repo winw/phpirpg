@@ -45,6 +45,7 @@ border-bottom:none;
 }
 .menuright { 
 float:right;
+font-style:italic;
 }
 .global { 
 text-align:justify;
@@ -85,6 +86,7 @@ div.tbody {
 display:table-row-group;
 counter-reset:case; }
 div.tr_menu {
+font-weight:bold;
 display:table-row; 
 background-color: #DDD; 
 background-image: -webkit-gradient(linear, 0 0, 0 100%, color-stop(.5, rgba(255, 255, 255, .2)), color-stop(.5, transparent), to(transparent));
@@ -142,8 +144,9 @@ padding:1px;
 width:auto;
 }
 .title {
-border-bottom: 1px solid #ccc;
+border-bottom:1px solid #ccc;
 text-align:left;
+font-weight:bold;
 width:100%;
 margin:0 auto; 
 padding:0px;
