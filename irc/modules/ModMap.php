@@ -2,7 +2,7 @@
  class ModMap extends Module {
   private $oMap;
   
-  const MOVE_PLAYER_DELAY = 10;
+  const MOVE_PLAYER_DELAY = 10; // Mettre 5*60 ensuite
   
   public function onLoad(){
    $this->oMap = new Map(BASE_PATH.'maps/map-quest');
