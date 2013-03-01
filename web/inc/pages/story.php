@@ -1,2 +1,5 @@
+<?php
+if (!isset($_GET['q'])) { header("Location: ../../index.php?q=story"); }
+?>
 <div class="title"><strong>&#8250; Story of Idle-RPG.</strong></div>
-<div class="contents">coincoin</div>
+<div class="contents">Once upon a time, in a kingdom far far away, called #irpg (Qnet), two young reckless, win and Shiwang, loved playing all day at idle role-playing game. But one day they discovered that the king Voodoo, and his faithful servants, offered gifts to the robot to take advantage. Enraged, the two young intrepid hastened to leave the kingdom in search of a new game. After many attempts, they found nothing. It was then that an crazy idea invades their littles heads. <strong>"And if we create our own game?"</strong> Then the boys threw themselves into an epic quest in the field of development, and finally defeat the terrible monster hungry by hours work, called Hypertext Preprocessor.</div>
