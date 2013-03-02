@@ -1,33 +1,54 @@
 <?php
  class ModCalamities extends Module {
   private $aaCalamities = array();
+  private $iCheckDelay;
+  private $iProbability;
   
   public function onLoad(){
    $oXml = ModuleManager::dispatchTo('ModMap', 'getXml');
    // Loading calamities
+   $oAttributes = $oXml->calamities->attributes();
+   
+   if (!isset($oAttributes->probability, $oAttributes->every)) {
+    throw new ArgumentException();
+   }
+   
+   $this->iCheckDelay = (int)$oAttributes->every;
+   $this->iProbability = Utils::expressionToRatio($oAttributes->probability);
+   
    foreach ($oXml->calamities->calamity as $oCalamity) {
     $oAttributes = $oCalamity->attributes();
-    if (!isset($oAttributes->zone, $oAttributes->ratio, $oAttributes->penality)) {
+    if (!isset($oAttributes->zone, $oAttributes->penality)) {
      throw new ArgumentException();
     }
-    $aTmp = array('ratio' => (float) $oAttributes->ratio);
+
     $aFromTo = explode('-', $oAttributes->penality);
-    $aTmp['penality'] = array('from' => $aFromTo[0], 'to' => isset($aFromTo[1]) ? $aFromTo[1] : (float)$aFromTo[0]);
-    $aTmp['message'] = (string)$oCalamity;
-    $this->aaCalamities[(string) $oAttributes->zone][] = $aTmp;
+    $this->aaCalamities[(string) $oAttributes->zone][] = array(
+     'penality' => array('from' => $aFromTo[0], 'to' => isset($aFromTo[1]) ? $aFromTo[1] : (float)$aFromTo[0]),
+     'message' => (string)$oCalamity
+    );
    }
+   
+   $oTimer = new Timer($this->iCheckDelay, 0, function(){
+    $this->doCheckCalamities();
+   });
+   
+   TimerManager::add(__CLASS__.'doCheckCalamities', $oTimer);
   }
   
-  public function onUserMove($iIdIrpgUser, $iOldX, $iOldY, $iNewX, $iNewY) {
-   $sZone = ModuleManager::dispatchTo('ModMap', 'getZone', $iNewX, $iNewY);
+  private function doCheckCalamities() {
+   if (rand(1, $this->iProbability) == 1) {
+    $oIrpgUsers = new dbIrpgUsers();
+    if ($oIrpgUser = $oIrpgUsers->select('id, x, y')->where('irpg_users.id IN (SELECT channel_users.id_irpg_user FROM channel_users WHERE channel_users.id_irpg_user IS NOT NULL)')->order('RAND()')->fetch()) {
+     $sZone = ModuleManager::dispatchTo('ModMap', 'getZone', $oIrpgUser->x, $oIrpgUser->y);
 
-   if ($sZone != '' && isset($this->aaCalamities[$sZone])) {
-    $aCalamity = $this->aaCalamities[$sZone][rand(0, count($this->aaCalamities[$sZone])-1)];
-
-    if (rand(1, 100) <= $aCalamity['ratio']) {
-     $iPenalityRatio = rand($aCalamity['penality']['from'], $aCalamity['penality']['to']) / 100;
-     
-     $this->doCalamity($iIdIrpgUser, $aCalamity['message'], $iPenalityRatio);
+     if (($sZone != '') && isset($this->aaCalamities[$sZone])) {
+      $aCalamity = $this->aaCalamities[$sZone][rand(0, count($this->aaCalamities[$sZone])-1)];
+      
+      $iPenalityRatio = rand($aCalamity['penality']['from'], $aCalamity['penality']['to']) / 100;
+      
+      $this->doCalamity((int)$oIrpgUser->id, $aCalamity['message'], $iPenalityRatio);
+     }
     }
    }
   }

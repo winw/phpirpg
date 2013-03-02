@@ -30,5 +30,14 @@
   public static function between($i1, $i2, $i3) {
    return ($i1 >= $i2) && ($i1 <= $i3);
   }
+  
+  public static function expressionToRatio($sExpression) {
+   $aRatio = explode('/', $sExpression);
+   if (isset($aRatio[1])) {
+    return round($aRatio[1] / $aRatio[0]);
+   } else {
+    return (int)$sExpression;
+   }
+  }
  }
 ?>

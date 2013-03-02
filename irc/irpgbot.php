@@ -62,8 +62,7 @@
   'nick' => IRPG_NICK,
   'user' => IRPG_USER,
   'description' => IRPG_DESCRIPTION,
-  'channel' => IRPG_CHANNEL,
-  'netsplit' => SERVER_NETSPLIT
+  'channel' => IRPG_CHANNEL
  ));
  
  while (true) {

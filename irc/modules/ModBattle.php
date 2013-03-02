@@ -48,7 +48,7 @@
   }
   
   public function onUserLevelUp($iIrpgUserId, $iNewLevel, $iTimeToNextLevel) {
-   if ($iNewNevel >= self::MIN_LEVEL) {
+   if ($iNewLevel >= self::MIN_LEVEL) {
     $oIrpgUsers = new dbIrpgUsers();
     // On recherche un autre joueur à tabasser :)
     $oIrpgUser = $oIrpgUsers->select('id')->where('irpg_users.id IN (SELECT channel_users.id_irpg_user FROM channel_users WHERE channel_users.id_irpg_user IS NOT NULL AND channel_users.id_irpg_user != ?) AND (irpg_users.date_no_battle IS NULL OR NOW() > irpg_users.date_no_battle) AND level >= ?', $iIrpgUserId, self::MIN_LEVEL)->order('RAND()')->fetch();
