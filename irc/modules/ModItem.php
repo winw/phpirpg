@@ -3,8 +3,8 @@
   public function onLoad(){}
   
   private function calculateItemLevel($iLevel) {
-   for ($i = $iLevel * M_PI_2; $i > 1; --$i) {
-    if (rand(1, pow(M_PI_2, $i / 5)) == 1) {
+   for ($i = $iLevel * BASE_MULTIPLICATOR; $i > 1; --$i) {
+    if (rand(1, pow(BASE_MULTIPLICATOR, $i / 5)) == 1) {
      return round($i);
     }
    }

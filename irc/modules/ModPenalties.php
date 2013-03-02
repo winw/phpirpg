@@ -13,7 +13,7 @@
   public function onLoad(){}
   
   public function getPenaltiesTime($iLevel, $iNb) {
-   return $iNb * pow(M_PI_2, $iLevel);
+   return $iNb * pow(BASE_MULTIPLICATOR, $iLevel);
   }
   
   private function doPenaltie($iIdIrpgUser, $iNb, $iReason) {

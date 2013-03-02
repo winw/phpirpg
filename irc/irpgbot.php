@@ -9,21 +9,16 @@
 
  define('BASE_PATH', __DIR__.'/');
  
+ require_once 'config.php';
+ 
  require_once 'inc/Utils.class.php';
- 
  require_once 'inc/ParsedLine.class.php';
- 
  require_once 'inc/IrcCommands.class.php';
- 
  require_once 'inc/ParsedMask.class.php';
- 
  require_once 'inc/Map.class.php';
- 
  require_once 'inc/Module.class.php';
- 
  require_once 'inc/Timer.class.php';
  require_once 'inc/TimerManager.class.php';
- 
  require_once 'inc/ModuleManager.class.php';
 
  require_once 'core.class.php';
@@ -38,7 +33,7 @@
  require_once 'inc/mysqlman/dbObject.class.php';
  
  /* Création des instances pdo */
- $oPdo = new PDO('mysql:dbname=phpirpg;host=localhost;charset=utf8;socket=/var/run/mysqld/mysqld.sock', 'root', 'toor', Array(
+ $oPdo = new PDO(DB_DSN, DB_LOGIN, DB_PASSWORD, Array(
   PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
  ));
  dbInstance::create('site', $oPdo);
@@ -62,16 +57,6 @@
   echo '= '.$sLine."\n";
  }
  
- define('SERVER_IP', '83.140.172.210');
- define('SERVER_PORT', 6667);
- define('SERVER_NETSPLIT', '#^\*.net \*.split$#');
- 
- define('IRPG_NICK', 'phpirpgbot');
- define('IRPG_USER', 'phpirpgbot');
- define('IRPG_DESCRIPTION', 'phpirpg');
- define('IRPG_CHANNEL', '#win');
- 
- 
  $oCore = new Core();
  $oIrc = new Irc($oCore, array(
   'nick' => IRPG_NICK,
@@ -80,16 +65,6 @@
   'channel' => IRPG_CHANNEL,
   'netsplit' => SERVER_NETSPLIT
  ));
- 
- $oTimer = new Timer(60, 0, function() {
-  try {
-   dbInstance::get('site')->query('SELECT 1;');
-  } catch (Exception $e) {
-   echo $e->getMessage()."\n";
-  }
- });
- 
- TimerManager::add('mysql_antiidle', $oTimer);
  
  while (true) {
   try {
