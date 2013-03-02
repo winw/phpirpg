@@ -27,13 +27,16 @@
     $oChannelUser->date_autologin = new dbDontEscapeString('NULL');
    } else if ($this->isGameChannel($sChannel)) {
     if ($oChannelUser->autologin) {
-     // Auto login user
      $oChannelUser->date_autologin = new dbDontEscapeString('NULL');
     }
    }
    $oChannelUser->user = $oWho->getUser();
    $oChannelUser->host = $oWho->getHost();
    $oChannelUser->save();
+   
+   if ($oChannelUser->autologin) {
+    ModuleManager::dispatch('doUserLogin', $oWho, $oChannelUser->id_irpg_user, true);
+   }
    
    if ($this->isMe($oWho->getNick())) {
     $this->bInWho = true;
