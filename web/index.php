@@ -1,18 +1,18 @@
 <?php
-error_reporting(E_ALL & ~E_WARNING);
+ error_reporting(E_ALL & ~E_WARNING);
  define('BASE_PATH', dirname(__FILE__).'/');
  require_once 'inc/mysqlman/dbDontEscapeString.class.php';
  require_once 'inc/mysqlman/dbInstance.class.php';
  require_once 'inc/mysqlman/dbClassGen.class.php';
-dbClassGen::$sPath = BASE_PATH.'inc/mysqlman/db/';
+ dbClassGen::$sPath = BASE_PATH.'inc/mysqlman/db/';
  require_once 'inc/mysqlman/dbControl.class.php';
  require_once 'inc/mysqlman/dbObject.class.php';
  require_once 'inc/mysqlman/Utils.class.php';
  require_once 'inc/mysqlman/dbPrimitiveObject.class.php';
  require_once('inc/mysqlman/security_requestPollution.class.php');
  require_once 'inc/pages/count.php';
- if (PHP_VERSION < 5.2) trigger_error('Le systeme a besoin de php 5.2 minimum', E_USER_ERROR);
- if (!class_exists('PDO')) trigger_error('Le systeme a besoin de l\'extension PDO pour gerer les bases de donnees', E_USER_ERROR);
+ if (PHP_VERSION < 5.2) trigger_error('System requires php version > 5.2', E_USER_ERROR);
+ if (!class_exists('PDO')) trigger_error('System requires PDO extension to manage the databases.', E_USER_ERROR);
  
  $oPdo = new PDO('mysql:dbname=phpirpg;host=localhost', 'root', '', Array(
   PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
