@@ -79,25 +79,28 @@
   <area shape="rect" coords="327,358,345,375" href="wood_white_flower" />
  </areas>
  
-<calamity zone="desert" ratio="0.01" penality="0.1-0.5">%username was bitten by an extremely venomous snake.</calamity>
-<calamity zone="desert_black_hole" ratio="0.1" penality="0.1-0.5">%username fell in the black hole from desert of desolation.</calamity>
-<calamity zone="desert_cactus" ratio="0.1" penality="0.1-0.5">%username kissed a cactus.</calamity>
-<calamity zone="desert_lave" ratio="0.1" penality="0.1-0.5">%username took a bath in lava.</calamity>
-<calamity zone="desert_pyramid" ratio="0.1" penality="0.1-0.5">%username did a nice meeting with a scary mummy.</calamity>
-<calamity zone="empire" ratio="0.01" penality="0.1-0.5">%usernamehe was attacked by some wolves starved.</calamity>
-<calamity zone="lake_swirl" ratio="0.1" penality="0.1-0.5">%usernamehe was carried away by a terrible whirl.</calamity>
-<calamity zone="mountain" ratio="0.01" penality="0.1-0.5">%usernamehe was attacked by a brown bear starved.</calamity>
-<calamity zone="wood" ratio="0.01" penality="0.1-0.5">%username was trampled by some ferocious wild boars.</calamity>
-<calamity zone="wood_puit" ratio="0.1" penality="0.1-0.5">%username fell into a deep well.</calamity>
-
-<godsend zone="desert_oasis" ratio="0.1" penality="0.1-0.5">%username found an oasis in the desert.</godsend>
-<godsend zone="empire_castle" ratio="0.1" penality="0.1-0.5">%username met the king's wife, and you don't need to know what happend...</godsend>
-<godsend zone="empire_farm" ratio="0.1" penality="0.1-0.5">%username met a farmer. It gave it to him an homemade alcohol.</godsend>
-<godsend zone="empire_farm" ratio="0.1" penality="0.1-0.5">%username met the farmer's wife. It gave him a nice cake.</godsend>
-<godsend zone="empire_ice_lake" ratio="0.1" penality="0.1-0.5">%username fished a nice cod.</godsend>
-<godsend zone="mountain_gold" ratio="0.1" penality="0.1-0.5">%username found gold.</godsend>
-<godsend zone="wood_farm" ratio="0.1" penality="0.1-0.5">%username met a farmer. It gave it to him an homemade alcohol.</godsend>
-<godsend zone="wood_farm" ratio="0.1" penality="0.1-0.5">%username met the farmer's wife. It gave him a nice cake.</godsend>
-<godsend zone="wood_mushroom" ratio="0.1" penality="0.1-0.5">%username picked some magic mushrooms.</godsend>
-  
+ <calamities>
+  <calamity zone="desert" ratio="1" penality="10-50">%username was bitten by an extremely venomous snake.</calamity>
+  <calamity zone="desert_black_hole" ratio="10" penality="10-50">%username fell in the black hole from desert of desolation.</calamity>
+  <calamity zone="desert_cactus" ratio="10" penality="10-50">%username kissed a cactus.</calamity>
+  <calamity zone="desert_lave" ratio="10" penality="10-50">%username took a bath in lava.</calamity>
+  <calamity zone="desert_pyramid" ratio="10" penality="10-50">%username did a nice meeting with a scary mummy.</calamity>
+  <calamity zone="empire" ratio="1" penality="10-50">%usernamehe was attacked by some wolves starved.</calamity>
+  <calamity zone="lake_swirl" ratio="10" penality="10-50">%usernamehe was carried away by a terrible whirl.</calamity>
+  <calamity zone="mountain" ratio="1" penality="10-50">%usernamehe was attacked by a brown bear starved.</calamity>
+  <calamity zone="wood" ratio="1" penality="10-50">%username was trampled by some ferocious wild boars.</calamity>
+  <calamity zone="wood_puit" ratio="10" penality="10-50">%username fell into a deep well.</calamity>
+ </calamities>
+ 
+ <godsends>
+  <godsend zone="desert_oasis" ratio="10" penality="10-50">%username found an oasis in the desert.</godsend>
+  <godsend zone="empire_castle" ratio="10" penality="10-50">%username met the king's wife, and you don't need to know what happend...</godsend>
+  <godsend zone="empire_farm" ratio="10" penality="10-50">%username met a farmer. It gave it to him an homemade alcohol.</godsend>
+  <godsend zone="empire_farm" ratio="10" penality="10-50">%username met the farmer's wife. It gave him a nice cake.</godsend>
+  <godsend zone="empire_ice_lake" ratio="10" penality="10-50">%username fished a nice cod.</godsend>
+  <godsend zone="mountain_gold" ratio="10" penality="10-50">%username found gold.</godsend>
+  <godsend zone="wood_farm" ratio="10" penality="10-50">%username met a farmer. It gave it to him an homemade alcohol.</godsend>
+  <godsend zone="wood_farm" ratio="10" penality="10-50">%username met the farmer's wife. It gave him a nice cake.</godsend>
+  <godsend zone="wood_mushroom" ratio="10" penality="10-50">%username picked some magic mushrooms.</godsend>
+ </godsends>
 </map>
