@@ -1,8 +1,10 @@
-#!../php/php -ddisplay_errors=1; -dsafe_mode=0; -derror_reporting=-1
+#!../php/php -ddisplay_errors=1; -dsafe_mode=0
 <?php
  if (version_compare(PHP_VERSION, '5.4.0', '<')) {
   die("php >= 5.4.0 is required\n");
  }
+ 
+ error_reporting(E_ALL);
  set_time_limit(0);
  ignore_user_abort(false);
  date_default_timezone_set('Europe/Paris');
@@ -38,11 +40,9 @@
  ));
  dbInstance::create('site', $oPdo);
  
- /* Generation des fichiers de bases de données si on est pas en prod */
- if (1) {
-  foreach (dbInstance::getList() as $sName) {
-   dbClassGen::fromInstanceName($sName);
-  }
+ /* Generation des fichiers de bases de données */
+ foreach (dbInstance::getList() as $sName) {
+  dbClassGen::fromInstanceName($sName);
  }
  
  /* Chargement des DBs */

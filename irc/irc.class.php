@@ -7,7 +7,7 @@
    'chantypes' => array('&', '#'),
    'prefix' => array('o' => '@', 'v' => '+')
   );
-  private $aModules = array('ModChannelUsers', 'ModCore', 'ModPenalties', 'ModLevel', 'ModItem', 'ModMap', 'ModBattle');
+  private $aModules = array();
   
   public function __construct(Core &$oCore, array $aConfiguration) {
    $this->oCore = $oCore;
@@ -15,7 +15,7 @@
     throw new ArgumentException();
    }
    $this->aConfiguration = $aConfiguration;
-   
+   $this->aModules = explode(' ', IRPG_MODULES);
    $this->loadModules();
   }
   

@@ -67,6 +67,10 @@
    return $this->oMap->getHeight();
   }
   
+  public function getXml() {
+   return $this->oMap->getXml();
+  }
+  
   public function onCtcp(ParsedMask $oWho, $sTarget, $sMessage){}
   public function onMsg(ParsedMask $oWho, $sTarget, $sMessage){
    if (preg_match('/^!z (\d+) (\d+)$/', $sMessage, $aRegs)) {
