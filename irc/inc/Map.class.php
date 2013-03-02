@@ -16,16 +16,13 @@
   }
   
   public function in($iX, $iY) {
-   return self::between($iX, $this->iX1, $this->iX2) && self::between($iY, $this->iY1, $this->iY2);
+   return Utils::between($iX, $this->iX1, $this->iX2) && Utils::between($iY, $this->iY1, $this->iY2);
   }
   
   public function getZone() {
    return $this->sZone;
   }
   
-  private static function between($i1, $i2, $i3) {
-   return ($i1 >= $i2) && ($i1 <= $i3);
-  }
  }
  
  class Map {
@@ -34,6 +31,7 @@
   private $aMap;
   private $aoAreas = array();
   private $aiPlayers = array();
+  private $oXml;
   
   public function __construct($sDirectory) {
    if (!is_dir($sDirectory)) {
@@ -60,6 +58,8 @@
     throw new Exception('Map file must contain width and height attributes');
    }
    
+   $this->oXml = $oXml;
+   
    $this->aMapSize['width'] = (int)$oXml->attributes()->width;
    $this->aMapSize['height'] = (int)$oXml->attributes()->height;
    
@@ -78,6 +78,10 @@
   
   public function getHeight() {
    return $this->aMapSize['height'];
+  }
+  
+  public function getXml() {
+   return $this->oXml;
   }
   
   public function getZone($iX, $iY) {

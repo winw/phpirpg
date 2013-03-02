@@ -26,5 +26,9 @@
    
    return rtrim($sReturn, ', ');
   }
+  
+  public static function between($i1, $i2, $i3) {
+   return ($i1 >= $i2) && ($i1 <= $i3);
+  }
  }
 ?>
