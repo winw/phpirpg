@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <map width="960" height="735">
+
  <areas>
   <area shape="rect" coords="127,95,389,160" href="city" />
   <area shape="rect" coords="161,66,191,95" href="city" />
@@ -50,9 +51,6 @@
   <area shape="rect" coords="448,383,477,672" href="wood" />
   <area shape="rect" coords="96,511,130,573" href="wood" />
   <area shape="rect" coords="96,351,130,382" href="wood" />
-  <area shape="rect" coords="488,318,506,351" href="city_watch_tower_south" />
-  <area shape="rect" coords="392,64,410,97" href="city_watch_tower_north" />
-  <area shape="rect" coords="800,450,832,479" href="desert_animal_bone" />
   <area shape="rect" coords="544,642,576,671" href="desert_black_hole" />
   <area shape="rect" coords="706,638,736,673" href="desert_cactus" />
   <area shape="rect" coords="611,414,641,449" href="desert_cactus" />
@@ -63,44 +61,53 @@
   <area shape="rect" coords="799,190,866,222" href="empire_farm" />
   <area shape="rect" coords="709,131,734,154" href="empire_ice_lake" />
   <area shape="rect" coords="806,228,831,251" href="empire_ice_lake" />
-  <area shape="rect" coords="708,99,733,122" href="empire_igloo" />
   <area shape="rect" coords="481,191,512,219" href="lake_swirl" />
   <area shape="rect" coords="514,128,545,156" href="lake_swirl" />
   <area shape="rect" coords="64,643,95,671" href="moutain_gold" />
   <area shape="rect" coords="129,3,160,31" href="mountain_gold" />
-  <area shape="rect" coords="66,417,97,446" href="mountain_temple" />
   <area shape="rect" coords="259,609,320,637" href="wood_farm" />
-  <area shape="rect" coords="287,448,322,514" href="wood_forgotten_tower" />
   <area shape="rect" coords="420,388,443,410" href="wood_mushroom" />
   <area shape="rect" coords="389,678,412,700" href="wood_mushroom" />
   <area shape="rect" coords="352,511,384,542" href="wood_puit" />
-  <area shape="rect" coords="128,320,158,351" href="wood_red_flower" />
-  <area shape="rect" coords="488,487,506,504" href="wood_red_flower" />
-  <area shape="rect" coords="327,358,345,375" href="wood_white_flower" />
  </areas>
  
- <calamities probability="1/60" every="10">
-  <calamity zone="desert" penality="10-50">%username was bitten by an extremely venomous snake.</calamity>
-  <calamity zone="desert_black_hole" penality="10-50">%username fell in the black hole from desert of desolation.</calamity>
-  <calamity zone="desert_cactus" penality="10-50">%username kissed a cactus.</calamity>
-  <calamity zone="desert_lave" penality="10-50">%username took a bath in lava.</calamity>
-  <calamity zone="desert_pyramid" penality="10-50">%username did a nice meeting with a scary mummy.</calamity>
-  <calamity zone="empire" penality="10-50">%username was attacked by some wolves starved.</calamity>
-  <calamity zone="lake_swirl" penality="10-50">%username was carried away by a terrible whirl.</calamity>
-  <calamity zone="mountain" penality="10-50">%username was attacked by a brown bear starved.</calamity>
-  <calamity zone="wood" penality="10-50">%username was trampled by some ferocious wild boars.</calamity>
-  <calamity zone="wood_puit" penality="10-50">%username fell into a deep well.</calamity>
+ <calamities probability="1/86400" every="10">
+  <calamity zone="city" penality="10">%username was robbed by a group of thugs in the Paretiam City.</calamity>
+  <calamity zone="desert" penality="10">%username was bitten by an extremely venomous snake from Desert of Desolation.</calamity>
+  <calamity zone="desert" penality="10">%username caught a terrible insolation from Desert of Desolation.</calamity>
+  <calamity zone="desert_black_hole" penality="10">%username fell in the black hole from Desert of Desolation.</calamity>
+  <calamity zone="desert_cactus" penality="10">%username kissed a cactus from Desert of Desolation.</calamity>
+  <calamity zone="desert_lave" penality="10">%username took a bath in lava from Desert of Desolation.</calamity>
+  <calamity zone="desert_pyramid" penality="10">%username did a nice meeting with a scary mummy from the pyramid of Desert of Desolation.</calamity>
+  <calamity zone="empire" penality="10">%username was attacked by some wolves starved from the Empire of Kasouka.</calamity>
+  <calamity zone="empire" penality="10">%username did a nice meeting with a huge polar bear starved from the Empire of Kasouka.</calamity>
+  <calamity zone="lake_swirl" penality="10">%username was carried away by a terrible whirl in Bottomless lake.</calamity>
+  <calamity zone="lake" penality="10">%username lost his breath and drowned in the Bottomless lake.</calamity>
+  <calamity zone="mountain" penality="10">%username did a nice meeting with a huge brown bear starved from Varoshan Montains.</calamity>
+  <calamity zone="wood" penality="10">%username was trampled by some ferocious wild boars from Woodyfinch.</calamity>
+  <calamity zone="wood_puit" penality="10">%username fell into a deep well from Woodyfinch.</calamity>
  </calamities>
  
- <godsends>
-  <godsend zone="desert_oasis" ratio="10" penality="10-50">%username found an oasis in the desert.</godsend>
-  <godsend zone="empire_castle" ratio="10" penality="10-50">%username met the king's wife, and you don't need to know what happend...</godsend>
-  <godsend zone="empire_farm" ratio="10" penality="10-50">%username met a farmer. It gave it to him an homemade alcohol.</godsend>
-  <godsend zone="empire_farm" ratio="10" penality="10-50">%username met the farmer's wife. It gave him a nice cake.</godsend>
-  <godsend zone="empire_ice_lake" ratio="10" penality="10-50">%username fished a nice cod.</godsend>
-  <godsend zone="mountain_gold" ratio="10" penality="10-50">%username found gold.</godsend>
-  <godsend zone="wood_farm" ratio="10" penality="10-50">%username met a farmer. It gave it to him an homemade alcohol.</godsend>
-  <godsend zone="wood_farm" ratio="10" penality="10-50">%username met the farmer's wife. It gave him a nice cake.</godsend>
-  <godsend zone="wood_mushroom" ratio="10" penality="10-50">%username picked some magic mushrooms.</godsend>
+ <godsends probability="1/60" every="10">
+  <godsend zone="desert_oasis" penality="20">%username found an oasis in the Desert of Desolation.</godsend>
+  <godsend zone="empire_castle" penality="20">%username have sex with Kasouka's wife at the castle.</godsend>
+  <godsend zone="empire_farm" penality="20">%username met a farmer from the Empire of Kasouka. It gave it to him an homemade alcohol.</godsend>
+  <godsend zone="empire_farm" penality="20">%username met the farmer's wife from the Empire of Kasouka. It gave him a nice cake.</godsend>
+  <godsend zone="empire_ice_lake" penality="20">%username fished a nice cod in the little ice lake from the Empire of Kasouka.</godsend>
+  <godsend zone="mountain_gold" penality="20">%username discovered some gold in the Varoshan Montains.</godsend>
+  <godsend zone="wood_farm" penality="20">%username met a farmer from Woodyfinch. It gave it to him an homemade alcohol.</godsend>
+  <godsend zone="wood_farm" penality="20">%username met the farmer's wife from Woodyfinch. It gave him a nice cake.</godsend>
+  <godsend zone="wood_mushroom" penality="20">%username picked some magic mushrooms from Woodyfinch.</godsend>
  </godsends>
+ 
+ <quests>
+  <quest x="80" y="440">locate the temple in the Varoshan mountains and meet the monk who will give you some battle skills.</quest>
+  <quest x="305" y="500">locate the forgotten tower in Woodyfinch and find an hidden treasure.</quest>
+  <quest x="495" y="345">locate the south watch tower in Paretiam City and destroy it.</quest>
+  <quest x="864" y="87">locate the castle of Kasouka. He wishes to thank you and entrust you to a banquet in your honor.</quest>
+  <quest x="719" y="113">locate the igloo in the Empire of Kasouka. Eskimo wants to teach you how to fish some cods.</quest>
+  <quest x="368" y="520">locate the puit in Woodyfinch. A child is dropped into, go rescue him!</quest>
+  <quest x="320" y="85">locate the town hall of Paretiam City. Mayor wants to offer you a mission to sweep away the thugs of the city.</quest>
+ </quests>
+ 
 </map>
