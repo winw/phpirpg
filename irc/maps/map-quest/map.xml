@@ -71,19 +71,6 @@
   <area shape="rect" coords="352,511,384,542" href="wood_puit" />
  </areas>
  
-<<<<<<< HEAD
- <calamities probability="3/86400" every="10">
-  <calamity zone="desert" penality="10-50">%username was bitten by an extremely venomous snake.</calamity>
-  <calamity zone="desert_black_hole" penality="10-50">%username fell in the black hole from desert of desolation.</calamity>
-  <calamity zone="desert_cactus" penality="10-50">%username kissed a cactus.</calamity>
-  <calamity zone="desert_lave" penality="10-50">%username took a bath in lava.</calamity>
-  <calamity zone="desert_pyramid" penality="10-50">%username did a nice meeting with a scary mummy.</calamity>
-  <calamity zone="empire" penality="10-50">%username was attacked by some wolves starved.</calamity>
-  <calamity zone="lake_swirl" penality="10-50">%username was carried away by a terrible whirl.</calamity>
-  <calamity zone="mountain" penality="10-50">%username was attacked by a brown bear starved.</calamity>
-  <calamity zone="wood" penality="10-50">%username was trampled by some ferocious wild boars.</calamity>
-  <calamity zone="wood_puit" penality="10-50">%username fell into a deep well.</calamity>
-=======
  <calamities probability="1/86400" every="10">
   <calamity zone="city" penality="10">%username was robbed by a group of thugs in the Paretiam City.</calamity>
   <calamity zone="desert" penality="10">%username was bitten by an extremely venomous snake from Desert of Desolation.</calamity>
@@ -99,7 +86,6 @@
   <calamity zone="mountain" penality="10">%username did a nice meeting with a huge brown bear starved from Varoshan Montains.</calamity>
   <calamity zone="wood" penality="10">%username was trampled by some ferocious wild boars from Woodyfinch.</calamity>
   <calamity zone="wood_puit" penality="10">%username fell into a deep well from Woodyfinch.</calamity>
->>>>>>> 63b3a48901b246def38b4f9799b56267230b1c62
  </calamities>
  
  <godsends probability="1/60" every="10">
