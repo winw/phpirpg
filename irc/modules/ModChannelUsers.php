@@ -28,15 +28,12 @@
    } else if ($this->isGameChannel($sChannel)) {
     if ($oChannelUser->autologin) {
      $oChannelUser->date_autologin = new dbDontEscapeString('NULL');
+     ModuleManager::dispatch('doUserLogin', $oWho, $oChannelUser->id_irpg_user, true);
     }
    }
    $oChannelUser->user = $oWho->getUser();
    $oChannelUser->host = $oWho->getHost();
    $oChannelUser->save();
-   
-   if ($oChannelUser->autologin) {
-    ModuleManager::dispatch('doUserLogin', $oWho, $oChannelUser->id_irpg_user, true);
-   }
    
    if ($this->isMe($oWho->getNick())) {
     $this->bInWho = true;
@@ -79,8 +76,9 @@
   
   public function onNick(ParsedMask $oWho, $sNewNick){
    $oChannelUsers = new dbChannelUsers();
-   if ($oChannelUser = $oChannelUsers->writable()->select()->where('channel = ? AND nick = ?', $sChannel, $oWho->getNick())->fetch()) {
-    $oChannelUser->nick = $sNewNick();
+   $aoChannelUsers = $oChannelUsers->writable()->select()->where('nick = ?', $oWho->getNick())->fetchAll();
+   foreach ($aoChannelUser as $oChannelUser) {
+    $oChannelUser->nick = $sNewNick;
     $oChannelUser->save();
    }
   }
