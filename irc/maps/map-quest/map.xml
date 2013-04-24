@@ -79,7 +79,7 @@
   <area shape="rect" coords="327,358,345,375" href="wood_white_flower" />
  </areas>
  
- <calamities probability="1/60" every="10">
+ <calamities probability="3/86400" every="10">
   <calamity zone="desert" penality="10-50">%username was bitten by an extremely venomous snake.</calamity>
   <calamity zone="desert_black_hole" penality="10-50">%username fell in the black hole from desert of desolation.</calamity>
   <calamity zone="desert_cactus" penality="10-50">%username kissed a cactus.</calamity>
