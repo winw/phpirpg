@@ -6,7 +6,8 @@
  define('IRPG_USER', 'phpirpgbot');
  define('IRPG_DESCRIPTION', 'phpirpg');
  define('IRPG_CHANNEL', '#win');
- define('IRPG_MODULES', 'ModChannelUsers ModCore ModPenalties ModLevel ModItem ModMap ModBattle ModCalamities');
+ //define('IRPG_MODULES', 'ModChannelUsers ModCore ModPenalties ModLevel ModItem ModMap ModBattle ModCalamities');
+ define('IRPG_MODULES', 'ModChannelUsers ModCore ModLevel ModItem ModMap ModBattle ModCalamities');
  
  define('BASE_MULTIPLICATOR', M_LNPI);
  
