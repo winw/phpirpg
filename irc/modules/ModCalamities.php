@@ -14,7 +14,7 @@
    }
    
    $this->iCheckDelay = (int)$oAttributes->every;
-   $this->iProbability = Utils::expressionToRatio($oAttributes->probability);
+   $this->iProbability = round(Utils::expressionToRatio($oAttributes->probability) / $this->iCheckDelay);
    
    foreach ($oXml->calamities->calamity as $oCalamity) {
     $oAttributes = $oCalamity->attributes();
