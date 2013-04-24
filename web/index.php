@@ -1,5 +1,5 @@
 <?php
- error_reporting(E_ALL & ~E_WARNING);
+ error_reporting(E_ALL);
  define('BASE_PATH', dirname(__FILE__).'/');
  require_once 'inc/mysqlman/dbDontEscapeString.class.php';
  require_once 'inc/mysqlman/dbInstance.class.php';
