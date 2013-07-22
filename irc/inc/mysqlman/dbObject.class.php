@@ -20,7 +20,7 @@
  /**
  * Classe de gestion sgbd (Objet de résultat)
  * @package db.mysqlman
- * @version 20130130
+ * @version 20130424
  * @author win (winwarrior@hotmail.com)
  * @license http://www.gnu.org/licenses/gpl.txt GNU Public License
  * @copyright Copyright (C) 2007-2013 win
@@ -158,9 +158,13 @@
    }
 
    if ($this->bExists) {
-    $aUpdate = $this->makeUpdate();
-    // @todo : revoir le comportement avec l'autowrite en cas d'erreur, $this->aFieldsUpdated n'est pas réinitialisé.
-    $bRes = (bool) $this->oInstance->prepare($aUpdate['query'])->execute($aUpdate['params']);
+    if (!$this->aFieldsUpdated) {
+     $bRes = false;
+    } else {
+     $aUpdate = $this->makeUpdate();
+     // @todo : revoir le comportement avec l'autowrite en cas d'erreur, $this->aFieldsUpdated n'est pas réinitialisé.
+     $bRes = (bool) $this->oInstance->prepare($aUpdate['query'])->execute($aUpdate['params']);
+    }
    } else {
     $aInsert = $this->makeInsert();
     // @todo : pareil que le commentaire du dessus

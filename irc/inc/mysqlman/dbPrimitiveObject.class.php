@@ -1,6 +1,6 @@
 <?php
  /**
- *   Copyright (C) 2007-2012 win (winwarrior@hotmail.com)
+ *   Copyright (C) 2007-2013 win (winwarrior@hotmail.com)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,14 +20,14 @@
  /**
  * Classe de gestion sgbd (Objet de résultat ayant quelques fonctions supplémentaires)
  * @package db.mysqlman
- * @version 20120423
+ * @version 20130719
  * @author win (winwarrior@hotmail.com)
  * @license http://www.gnu.org/licenses/gpl.txt GNU Public License
- * @copyright Copyright (C) 2007-2012 win
+ * @copyright Copyright (C) 2007-2013 win
  */
  class dbPrimitiveObject implements ArrayAccess {
   public function offsetExists($sKey) {
-   return isset($this->{$sKey});
+   return property_exists($this, $sKey);
   }
   
   public function offsetSet($sKey, $mValue) {
@@ -39,15 +39,15 @@
   }
   
   public function offsetGet($sKey) {
-   return isset($this->{$sKey}) ? $this->{$sKey} : false;
+   return property_exists($this, $sKey) ? $this->{$sKey} : false;
   }
   
   public function __isset($sKey) {
-   return isset($this->{$sKey});
+   return property_exists($this, $sKey);
   }
   
   public function __get($sKey) {
-   return isset($this->{$sKey}) ? $this->{$sKey} : false;
+   return property_exists($this, $sKey) ? $this->{$sKey} : false;
   }
   
   public function __set($sKey, $mValue) {
