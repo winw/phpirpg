@@ -25,7 +25,7 @@
   
   public function onJoin(ParsedMask $oWho, $sChannel){
    $oChannelUsers = new dbChannelUsers();
-   var_dump(func_get_args());
+
    $oChannelUser = $oChannelUsers->writable()->select('*, IF(date_autologin IS NULL, 0, DATE_ADD(date_autologin, INTERVAL 10 MINUTE) > NOW()) AS autologin')->where('channel = ? AND nick = ?', $sChannel, $oWho->getNick())->fetch();
    if (!$oChannelUser) {
     $oChannelUser = $oChannelUsers->create();

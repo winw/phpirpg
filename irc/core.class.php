@@ -57,7 +57,7 @@
    if ($sLine) {
     if (preg_match('/^PING (.*)$/i', $sLine, $aRegs)) {
      return new ParsedLine($sLine, 'PING', array($aRegs[1]));
-    } else if (preg_match('/^:([^ ]+) JOIN (?:\:)([^ ]+)/', $sLine, $aRegs)) {
+    } else if (preg_match('/^:([^ ]+) JOIN (?:\:)?([^ ]+)/', $sLine, $aRegs)) {
      return new ParsedLine($sLine, 'JOIN', array($aRegs[1], $aRegs[2]));
     } else if (preg_match('/^:([^ ]+) PART ([^ ]+)(?:\s:)?(.*)?$/', $sLine, $aRegs)) {
      return new ParsedLine($sLine, 'PART', array($aRegs[1], $aRegs[2], $aRegs[3]));
