@@ -97,6 +97,7 @@
    if (!$this->isConnected()) {
     throw new SocketException('Not connected');
    }
+   debug('=> '.$sLine);
    return fputs($this->rSocket, substr($sLine, 0, 510)."\r\n");
   }
   

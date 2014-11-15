@@ -32,7 +32,7 @@
         } else if (strlen($sPassword) < 6) {
          $this->msg($oWho->getNick(), 'This password is too short, it must be > 5 caracters');
         } else if (!in_array($sType, array('test'))) {
-         $this->msg($oWho->getNick(), 'This type is unknown, types are : test');
+         $this->msg($oWho->getNick(), 'This type is unknown, types are: test');
         } else {
          try {
           $oIrpgUser = $oIrpgUsers->create();
@@ -98,6 +98,8 @@
         $this->msg($oWho->getNick(), 'You are not logged');
        }
       break;
+      default:
+       $this->msg($oWho->getNick(), 'Availables commands : REGISTER, LOGIN, LOGOUT, WHOAMI');
      }
     } else {
      $this->msg($oWho->getNick(), 'Availables commands : REGISTER, LOGIN, LOGOUT, WHOAMI');
@@ -108,14 +110,14 @@
   public function doUserLogin(ParsedMask $oWho, $iIdIrpgUser, $bSilent = false) {
    $oChannelUsers = new dbChannelUsers();
    $oIrpgUsers = new dbIrpgUsers();
-   if ($oChannelUser = $oChannelUsers->writable()->select()->where('channel = ? AND nick = ? AND user = ? AND host = ?', IRPG_CHANNEL, $oWho->getNick(), $oWho->getUser(), $oWho->getHost())->fetch()) {
+   if ($oChannelUser = $oChannelUsers->writable()->select()->where('channel = ? AND nick = ? AND user = ? AND host = ?', $this->getGameChannel(), $oWho->getNick(), $oWho->getUser(), $oWho->getHost())->fetch()) {
     $oChannelUser->id_irpg_user = $iIdIrpgUser;
     $oChannelUser->save();
     if ($oIrpgUser = $oIrpgUsers->writable()->select()->where('id = ?', $iIdIrpgUser)->fetch()) {
      $oIrpgUser->date_login = new dbDontEscapeString('NOW()');
      $oIrpgUser->save();
      if (!$bSilent) {
-      $this->msg(IRPG_CHANNEL, $oWho->getNick().' is now online with username '.$oIrpgUser->login.', next level in '.Utils::duration($oIrpgUser->time_to_level));
+      $this->msg($this->getGameChannel(), $oWho->getNick().' is now online with username '.$oIrpgUser->login.', next level in '.Utils::duration($oIrpgUser->time_to_level));
      }
      ModuleManager::dispatch('onUserLogin', $oWho, (int)$oIrpgUser->id);
     }

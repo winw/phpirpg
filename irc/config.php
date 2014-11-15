@@ -8,7 +8,7 @@
   const BOT_DESCRIPTION = 'phpirpg';
   const BOT_CHANNEL = '#idle-rpg';
   
-  const BOT_MODULES = 'ModChannelUsers ModCore ModLevel ModItem ModMap ModBattle ModCalamities ModDebug';
+  const BOT_MODULES = 'ModChannelUsers ModCore ModLevel ModItem ModMap ModBattle ModCalamities ModDebug ModReload';
   
   const DB_DSN = 'mysql:dbname=phpirpg;host=localhost;charset=utf8;socket=/var/run/mysqld/mysqld.sock';
   const DB_LOGIN = 'root';

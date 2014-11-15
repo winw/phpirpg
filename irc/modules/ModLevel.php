@@ -59,5 +59,9 @@
   public function onNamesLine($sChannel, array $aUsers){}
   public function onRaw($iRaw, $sArguments){}
   public function onEndOfWho($sTarget){}
-  public function onUnload(){}
+  public function onUnload(){
+   if (TimerManager::exists(__CLASS__.'checkLevels')) {
+    TimerManager::del(__CLASS__.'checkLevels');
+   }
+  }
  }
