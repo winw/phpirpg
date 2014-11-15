@@ -39,5 +39,28 @@
     return (int)$sExpression;
    }
   }
+  
+  /*
+   * @desc Permet d'assigner une clé en fonction de la valeur d'un champ
+  *
+  * @param $aoElems tableau d'objets ou d'array à analyser
+  * @param $sKey clé à utiliser pour la construction du tableau
+  * @param $bMulti true si la clée utilisée peut être multiple (renvoie donc un tableau de tableau)
+  *
+  * @return array
+  */
+  public static function assignInKey(array $aoElems, $sKey = 'id', $bMulti = false) {
+   $aRet = array();
+  
+   foreach ($aoElems as $oElem) {
+    if ($bMulti) {
+     $aRet[is_object($oElem) ? $oElem->{$sKey} : $oElem[$sKey]][] = $oElem;
+    } else {
+     $aRet[is_object($oElem) ? $oElem->{$sKey} : $oElem[$sKey]] = $oElem;
+    }
+   }
+  
+   return $aRet;
+  }
  }
 ?>

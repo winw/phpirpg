@@ -1,6 +1,7 @@
 <?php
  class ModuleManager {
   private static $aoModules = array();
+  private static $bPreventPropagation = false;
   
   public static function add(Module &$oModule) {
    $sClass = get_class($oModule);
@@ -10,7 +11,37 @@
    }
    
    self::$aoModules[$sClass] = $oModule;
-   $oModule->onLoad();
+   
+   self::dispatchTo($sClass, 'onLoad');
+  }
+  
+  public static function del(Module &$oModule) {
+   $sClass = get_class($oModule);
+   
+   if (!isset(self::$aoModules[$sClass])) {
+    throw new Exception('Module '.$sClass.' unknown');
+   }
+   
+   self::dispatchTo($sClass, 'onUnload');
+   
+   unset(self::$aoModules[$sClass]);
+  }
+  
+  public static function delFromName($sClass) {
+   if (!isset(self::$aoModules[$sClass])) {
+    throw new Exception('Module '.$sClass.' unknown');
+   }
+   
+   return self::del(self::$aoModules[$sClass]);
+  }
+  
+  public static function clear() {
+   self::dispatch('onUnload');
+   self::$aoModules = array();
+  }
+  
+  public static function getList() {
+   return array_keys(self::$aoModules);
   }
   
   public static function dispatch($sMethod) {
@@ -18,11 +49,19 @@
    
    $sMethod = array_shift($aArguments);
    
-   foreach (self::$aoModules as &$oModule) {
+   $aReturn = array();
+   
+   foreach (self::$aoModules as $sClass => &$oModule) {
+    if (self::$bPreventPropagation) {
+     self::$bPreventPropagation = false;
+     break;
+    }
     if (method_exists($oModule, $sMethod)) {
-     call_user_func_array(array($oModule, $sMethod), $aArguments);
+     $aReturn[$sClass] = call_user_func_array(array($oModule, $sMethod), $aArguments);
     }
    }
+   
+   return $aReturn;
   }
   
   public static function dispatchTo($sClass, $sMethod) {
@@ -41,5 +80,8 @@
    
    return call_user_func_array(array(self::$aoModules[$sClass], $sMethod), $aArguments);
   }
+  
+  public static function preventPropagation() {
+   self::$bPreventPropagation = true;
+  }
  }
-?>

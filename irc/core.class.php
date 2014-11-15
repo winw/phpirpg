@@ -7,11 +7,10 @@
  
  class Core {
   private $aConfiguration = array();
-  private $bConnected = false;
   private $rSocket;
   
   public function connect(array $aConfiguration) {
-   if ($this->bConnected) {
+   if ($this->isConnected()) {
     throw new Exception('Already connected to '.$this->aConfiguration['ip']);
    }
    
@@ -29,7 +28,7 @@
   }
   
   public function disconnect() {
-   if (!$this->bConnected) {
+   if (!$this->isConnected()) {
     throw new Exception('Not connected');
    }
    
@@ -37,8 +36,6 @@
     fclose($this->rSocket);
     $this->rSocket = null;
    }
-   
-   $this->bConnected = false;
   }
   
   private function doConnect() {
@@ -51,12 +48,7 @@
    
    $this->rSocket = $rSocket;
    
-   if ($this->isConnected()) {
-    $this->bConnected = true;
-    return true;
-   }
-   
-   return false;
+   return $this->isConnected();
   }
   
   public function parseLine() {
@@ -65,7 +57,7 @@
    if ($sLine) {
     if (preg_match('/^PING (.*)$/i', $sLine, $aRegs)) {
      return new ParsedLine($sLine, 'PING', array($aRegs[1]));
-    } else if (preg_match('/^:([^ ]+) JOIN ([^ ]+)/', $sLine, $aRegs)) {
+    } else if (preg_match('/^:([^ ]+) JOIN (?:\:)([^ ]+)/', $sLine, $aRegs)) {
      return new ParsedLine($sLine, 'JOIN', array($aRegs[1], $aRegs[2]));
     } else if (preg_match('/^:([^ ]+) PART ([^ ]+)(?:\s:)?(.*)?$/', $sLine, $aRegs)) {
      return new ParsedLine($sLine, 'PART', array($aRegs[1], $aRegs[2], $aRegs[3]));
@@ -102,14 +94,14 @@
   }
   
   public function writeLine($sLine) {
-   if (!$this->bConnected || !$this->isConnected()) {
+   if (!$this->isConnected()) {
     throw new SocketException('Not connected');
    }
-   return fputs($this->rSocket, $sLine."\r\n");
+   return fputs($this->rSocket, substr($sLine, 0, 510)."\r\n");
   }
   
   public function readLine() {
-   if (!$this->bConnected || !$this->isConnected()) {
+   if (!$this->isConnected()) {
     throw new SocketException('Not connected');
    }
    return trim(fgets($this->rSocket, 512));
@@ -119,4 +111,3 @@
    return ($this->rSocket && !feof($this->rSocket));
   }
  }
-?>

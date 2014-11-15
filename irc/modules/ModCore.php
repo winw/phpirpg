@@ -135,5 +135,5 @@
   public function onRaw($iRaw, $sArguments){}
   public function onEndOfWho($sTarget){}
   public function onLoad(){}
+  public function onUnload(){}
  }
-?>

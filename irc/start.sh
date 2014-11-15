@@ -1,0 +1,1 @@
+/usr/bin/php -dextension=/usr/lib/php5/20121212/runkit.so -ddisplay_errors=1 -dsafe_mode=0 -f ./irpgbot.php

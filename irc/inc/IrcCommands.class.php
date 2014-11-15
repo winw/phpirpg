@@ -1,7 +1,7 @@
 <?php
  abstract class IrcCommands {
   public function pong($sText) {
-   return $this->writeLine('PONG '.$sText);
+   return $this->writeLineNow('PONG '.$sText);
   }
   
   public function join($sChannel) {
@@ -44,6 +44,19 @@
    return $this->notice($sTarget, "\x01".$sMessage."\x01");
   }
   
+  public function mode($sTarget, $sModes) {
+   return $this->writeLine('MODE '.$sTarget.' '.$sModes);
+  }
+  
+  public function op($sChannel, $sNick) {
+   $this->mode($sChannel, '+o '.$sNick);
+  }
+  
+  public function deop($sChannel, $sNick) {
+   $this->mode($sChannel, '-o '.$sNick);
+  }
+  
   abstract protected function writeLine($sLine);
+  abstract protected function writeLineNow($sLine);
  }
 ?>

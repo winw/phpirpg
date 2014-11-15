@@ -5,9 +5,9 @@
   public $aConfiguration = array();
   public $aServerConfiguration = array(
    'chantypes' => array('&', '#'),
-   'prefix' => array('o' => '@', 'v' => '+')
+   'prefix' => array('q' => '&', 'a' => '~', 'o' => '@', 'h' => '%', 'v' => '+')
   );
-  private $aModules = array();
+  private $aLines = array();
   
   public function __construct(Core &$oCore, array $aConfiguration) {
    $this->oCore = $oCore;
@@ -15,15 +15,17 @@
     throw new ArgumentException();
    }
    $this->aConfiguration = $aConfiguration;
-   $this->aModules = explode(' ', IRPG_MODULES);
-   $this->loadModules();
-  }
-  
-  private function loadModules() {
-   foreach ($this->aModules as $sModule) {
-    include BASE_PATH.'modules/'.$sModule.'.php';
-    ModuleManager::add(new $sModule($this, $this->oCore));
-   }
+   
+   $fix_this = $this;
+   
+   $oTimer = new Timer(1, 0, function () use (&$fix_this){
+    if (count($fix_this->aLines) > 0) {
+     $sLine = array_shift($fix_this->aLines);
+     $fix_this->writeLineNow($sLine);
+    }
+   });
+     
+   TimerManager::add('delayed_writeline', $oTimer);
   }
   
   public function connected() {
@@ -36,12 +38,14 @@
   }
   
   public function disconnected() {
-   if ($this->bConnected) {
-    $this->bConnected = false;
-   }
+   $this->bConnected = false;
   }
   
   protected function writeLine($sLine) {
+   $this->aLines[] = $sLine;
+  }
+  
+  public function writeLineNow($sLine) {
    $this->oCore->writeLine($sLine);
   }
   
@@ -105,7 +109,6 @@
        if (isset($aArgs[1])) {
         ModuleManager::dispatch('onEndOfWho', $aArgs[1]);
        }
-       $this->bWho = false;
       break;
   /*
 << who #win
@@ -156,8 +159,8 @@
       break;
       default:
        debug('Unknown raw :'.$oLine);
-       ModuleManager::dispatch('onRaw', $oLine[0], $oLine[1]);
      }
+     ModuleManager::dispatch('onRaw', $oLine[0], $oLine[1]);
     break;
     default:
      debug('UnHandled: '.$oLine);

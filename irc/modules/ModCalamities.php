@@ -82,5 +82,5 @@
   public function onNamesLine($sChannel, array $aUsers){}
   public function onRaw($iRaw, $sArguments){}
   public function onEndOfWho($sTarget){}
+  public function onUnload(){}
  }
-?>

@@ -13,7 +13,7 @@
   public function onLoad(){}
   
   public function getPenaltiesTime($iLevel, $iNb) {
-   return $iNb * pow(BASE_MULTIPLICATOR, $iLevel);
+   return $iNb * pow(Configuration::BASE_MULTIPLICATOR, $iLevel);
   }
   
   private function doPenaltie($iIdIrpgUser, $iNb, $iReason) {
@@ -101,5 +101,5 @@
   public function onNamesLine($sChannel, array $aUsers){}
   public function onRaw($iRaw, $sArguments){}
   public function onEndOfWho($sTarget){}
+  public function onUnload(){}
  }
-?>

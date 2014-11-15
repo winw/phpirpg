@@ -1,4 +1,3 @@
-#!../php/php -ddisplay_errors=1; -dsafe_mode=0
 <?php
  if (version_compare(PHP_VERSION, '5.4.0', '<')) {
   die("php >= 5.4.0 is required\n");
@@ -35,7 +34,7 @@
  require_once 'inc/mysqlman/dbObject.class.php';
  
  /* Création des instances pdo */
- $oPdo = new PDO(DB_DSN, DB_LOGIN, DB_PASSWORD, Array(
+ $oPdo = new PDO(Configuration::DB_DSN, Configuration::DB_LOGIN, Configuration::DB_PASSWORD, Array(
   PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
  ));
  dbInstance::create('site', $oPdo);
@@ -54,23 +53,29 @@
  }
  
  function debug($sLine) {
-  echo '= '.$sLine."\n";
+  echo date('[H:i:s]').' '.$sLine."\n";
  }
  
- $oCore = new Core();
- $oIrc = new Irc($oCore, array(
-  'nick' => IRPG_NICK,
-  'user' => IRPG_USER,
-  'description' => IRPG_DESCRIPTION,
-  'channel' => IRPG_CHANNEL
- ));
- 
  while (true) {
+  $oCore = new Core();
+  $oIrc = new Irc($oCore, array(
+   'nick' => Configuration::BOT_NICK,
+   'user' => Configuration::BOT_USER,
+   'description' => Configuration::BOT_DESCRIPTION,
+   'channel' => Configuration::BOT_CHANNEL
+  ));
+  
   try {
    if ($oCore->connect(array(
-    'ip' => SERVER_IP,
-    'port' => SERVER_PORT
+    'ip' => Configuration::SERVER_IP,
+    'port' => Configuration::SERVER_PORT
    ))) {
+    
+    foreach (explode(' ', Configuration::BOT_MODULES) as $sModule) {
+     include_once BASE_PATH.'modules/'.$sModule.'.php';
+     ModuleManager::add(new $sModule($oIrc, $oCore));
+    }
+    
     for ($oIrc->connected(); $oCore->isConnected(); usleep(10000)) { // 1/100ème de seconde
      for (; ($oLine = $oCore->parseLine()) !== null; usleep(10000)) { // Lecture de 100lignes/seconde
       $oIrc->parse($oLine);
@@ -82,13 +87,16 @@
   } catch (SocketException $e) {
    debug('Disconnected : '.$e->getMessage());
   }
-
-  $oCore->disconnect();
+  
+  if ($oCore->isConnected()) { // Possible ça ?
+   $oCore->disconnect();
+  }
   
   $oIrc->disconnected();
   
   TimerManager::clear();
   
+  ModuleManager::clear();
+  
   sleep(30); // On attend 30s avant la reconnection
  }
-?>

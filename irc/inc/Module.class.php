@@ -1,7 +1,8 @@
 <?php
  abstract class Module extends IrcCommands {
-  private $oCore;
-  private $oIrc;
+  protected $oCore;
+  protected $oIrc;
+  private $aCache = array();
   
   public final function __construct(Irc &$oIrc, Core &$oCore) {
    $this->oIrc = $oIrc;
@@ -9,7 +10,11 @@
   }
   
   protected function writeLine($sLine) {
-   $this->oCore->writeLine($sLine);
+   $this->oIrc->writeLine(str_replace("\n", ' -- ',$sLine));
+  }
+  
+  protected function writeLineNow($sLine) {
+   $this->oIrc->writeLineNow(str_replace("\n", ' -- ',$sLine));
   }
   
   public function getMyNick() {
@@ -31,7 +36,21 @@
   public function isGameChannel($sChannel) {
    return $this->getGameChannel() === $sChannel;
   }
+
+  public function isCached($sKey) {
+   if (isset($this->aCache[$sKey]) && (time() > $this->aCache[$sKey][0])) {
+    unset($this->aCache[$sKey]);
+   }
+   return isset($this->aCache[$sKey]);
+  }
   
+  public function getCache($sKey) {
+   return $this->isCached($sKey) ? $this->aCache[$sKey][1] : null;
+  }
+  
+  public function setCache($sKey, $mValue, $iCacheTime) {
+   $this->aCache[$sKey] = array(time()+$iCacheTime, $mValue);
+  }
   public function getUserIdFromMask(ParsedMask $oWho) {
    $oChannelUsers = new dbChannelUsers();
    if ($oChannelUser = $oChannelUsers->select('id_irpg_user')->where('channel = ? AND nick = ? AND user = ? AND host = ? AND id_irpg_user IS NOT NULL', $this->getGameChannel(), $oWho->getNick(), $oWho->getUser(), $oWho->getHost())->fetch()) {
@@ -68,5 +87,5 @@
   abstract public function onNick(ParsedMask $oWho, $sNewNick);
   abstract public function onRaw($iRaw, $sArguments);
   abstract public function onEndOfWho($sTarget);
+  abstract public function onUnload();
  }
-?>
